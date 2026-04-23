@@ -13,6 +13,13 @@
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" rel="stylesheet">
 
+  <!-- Data qgis2web -->
+  <script src="data/DokterGigi_Sukoharjo_1.js"></script>
+  <script src="data/Apotek_2.js"></script>
+  <script src="data/Klinik_Sukoharjo_3.js"></script>
+  <script src="data/RumahSakit_Sukoharjo_4.js"></script>
+  <script src="data/building_5.js"></script>
+
   <style>
     :root{
       --primary:#1d3557;
@@ -636,7 +643,7 @@
       <div class="hero-kicker">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
       <h1>Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</h1>
       <p>
-        WebGIS ini menyajikan informasi persebaran fasilitas kesehatan di Kota Surakarta dan wilayah sekitarnya secara interaktif. Pengguna dapat melihat lokasi apotek, dokter gigi, klinik, dan rumah sakit, melakukan pencarian fasilitas, memilih tampilan peta, serta menampilkan rute menuju lokasi yang diinginkan.
+        WebGIS ini menyajikan informasi persebaran fasilitas kesehatan di Kota Surakarta dan wilayah sekitarnya secara interaktif. Kamu bisa memilih tampilan data fasilitas kesehatan Surakarta, data qgis2web Sukoharjo, atau overlay keduanya dalam satu peta interaktif.
       </p>
       <div class="hero-actions">
         <a href="#mapSection" class="btn btn-primary">Buka Halaman Peta</a>
@@ -647,7 +654,7 @@
     <div class="hero-card">
       <h3>Ringkasan Fasilitas</h3>
       <p>
-        Informasi ringkas jumlah fasilitas kesehatan yang sedang ditampilkan pada peta. Nilai ini akan ikut berubah saat pengguna melakukan filter atau pencarian.
+        Informasi ringkas jumlah fasilitas kesehatan yang sedang tampil pada peta. Nilai akan berubah mengikuti filter dan mode data yang dipilih.
       </p>
       <div class="hero-stats">
         <div class="hero-stat"><small>Total fasilitas</small><strong id="heroTotal">43</strong></div>
@@ -662,15 +669,25 @@
     <div class="section-header">
       <h2>Peta Interaktif Fasilitas Kesehatan</h2>
       <p>
-        Gunakan panel di samping kiri untuk memfilter kategori fasilitas, mencari lokasi, mengganti tampilan basemap, dan memahami fungsi utama web. Area peta dibuat lebih lebar agar tampil sejajar, rapi, informatif, dan nyaman digunakan pada layar penuh.
+        Gunakan panel di samping kiri untuk memfilter kategori fasilitas, mencari lokasi, mengganti tampilan basemap, dan memilih mode data. Kamu bisa menampilkan data fasilitas Surakarta, data qgis2web Sukoharjo, atau overlay keduanya.
       </p>
     </div>
 
     <div class="map-layout">
       <aside class="sidebar">
         <div class="card">
-          <h3>Filter Fasilitas</h3>
-          <p class="muted">Pilih kategori fasilitas kesehatan yang ingin ditampilkan pada peta.</p>
+          <h3>Mode Data</h3>
+          <p class="muted">Pilih data yang ingin ditampilkan pada peta.</p>
+          <select id="layerModeSelect">
+            <option value="health" selected>Fasilitas Kesehatan Surakarta</option>
+            <option value="qgis">QGIS2Web Sukoharjo</option>
+            <option value="overlay">Overlay Keduanya</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <h3>Filter Fasilitas Surakarta</h3>
+          <p class="muted">Filter ini berlaku untuk data fasilitas kesehatan Surakarta.</p>
           <div class="filter-list">
             <label class="filter-item"><input type="checkbox" id="apotek" checked> Apotek</label>
             <label class="filter-item"><input type="checkbox" id="dokter" checked> Dokter Gigi</label>
@@ -681,7 +698,7 @@
 
         <div class="card">
           <h3>Pencarian</h3>
-          <p class="muted">Cari fasilitas berdasarkan nama, kategori, atau alamat lokasi.</p>
+          <p class="muted">Cari fasilitas berdasarkan nama, kategori, atau alamat pada data Surakarta.</p>
           <input type="text" id="searchBox" class="search-box" placeholder="Cari fasilitas...">
         </div>
 
@@ -700,22 +717,34 @@
 
         <div class="card">
           <h3>Informasi Penggunaan</h3>
-          <p class="muted">Klik marker untuk melihat detail fasilitas dan gunakan fitur rute untuk menuju lokasi pilihan.</p>
+          <p class="muted">Klik marker atau area layer untuk melihat detail fasilitas dan gunakan fitur rute untuk menuju lokasi pilihan pada data Surakarta.</p>
           <ul style="padding-left:18px; margin:12px 0 0;">
-            <li>Filter kategori fasilitas kesehatan</li>
-            <li>Cari nama atau alamat fasilitas</li>
+            <li>Pilih mode data yang ingin ditampilkan</li>
+            <li>Filter kategori fasilitas Surakarta</li>
+            <li>Cari nama atau alamat fasilitas Surakarta</li>
             <li>Tentukan rute ke lokasi tujuan</li>
             <li>Ubah tampilan peta sesuai kebutuhan</li>
           </ul>
         </div>
 
         <div class="card">
-          <h3>Legenda</h3>
+          <h3>Legenda Surakarta</h3>
           <div class="legend-list">
             <div class="legend-item"><span class="dot" style="background:#2a9d8f"></span> 💊 Apotek</div>
             <div class="legend-item"><span class="dot" style="background:#f4a261"></span> 🦷 Dokter Gigi</div>
             <div class="legend-item"><span class="dot" style="background:#457b9d"></span> 🩺 Klinik</div>
             <div class="legend-item"><span class="dot" style="background:#e63946"></span> 🏥 Rumah Sakit</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Legenda QGIS2Web</h3>
+          <div class="legend-list">
+            <div class="legend-item"><span class="dot" style="background:#eeff01"></span> Dokter Gigi Sukoharjo</div>
+            <div class="legend-item"><span class="dot" style="background:#1edec8"></span> Apotek Sukoharjo</div>
+            <div class="legend-item"><span class="dot" style="background:#e896a4"></span> Klinik Sukoharjo</div>
+            <div class="legend-item"><span class="dot" style="background:#e80000"></span> Rumah Sakit Sukoharjo</div>
+            <div class="legend-item"><span class="dot" style="background:#ff8500"></span> Building</div>
           </div>
         </div>
       </aside>
@@ -748,7 +777,7 @@
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiZmlyZGFhdWxpeWFyYWhtYSIsImEiOiJjbW5wdnI2eWQwMHZ4MzBwc2E5aGNkbm1oIn0.jLkgH9Y1ywcPyrg19wPi9w';
 
-    const soloCenter = [110.82409,-7.57251];
+    const soloCenter = [110.82409, -7.57251];
 
     const categoryConfig = {
       apotek: {
@@ -785,6 +814,39 @@
       }
     };
 
+    const qgisLayerConfig = [
+      {
+        key: 'dokter_sukoharjo',
+        varName: 'json_DokterGigi_Sukoharjo_1',
+        sourceId: 'qgis-dokter-sukoharjo',
+        color: '#eeff01'
+      },
+      {
+        key: 'apotek_sukoharjo',
+        varName: 'json_Apotek_2',
+        sourceId: 'qgis-apotek-sukoharjo',
+        color: '#1edec8'
+      },
+      {
+        key: 'klinik_sukoharjo',
+        varName: 'json_Klinik_Sukoharjo_3',
+        sourceId: 'qgis-klinik-sukoharjo',
+        color: '#e896a4'
+      },
+      {
+        key: 'rs_sukoharjo',
+        varName: 'json_RumahSakit_Sukoharjo_4',
+        sourceId: 'qgis-rs-sukoharjo',
+        color: '#e80000'
+      },
+      {
+        key: 'building_sukoharjo',
+        varName: 'json_building_5',
+        sourceId: 'qgis-building-sukoharjo',
+        color: '#ff8500'
+      }
+    ];
+
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/outdoors-v12',
@@ -807,9 +869,11 @@
     map.addControl(directions, 'top-right');
 
     let geojsonStore = { apotek:null, dokter:null, klinik:null, rs:null };
+    let qgisStore = {};
     let popup = null;
     let currentRouteState = { origin:null, destination:null };
     let htmlMarkers = { apotek:[], dokter:[], klinik:[], rs:[] };
+    let currentLayerMode = 'health';
 
     function normalizeText(text){
       return String(text || '').toLowerCase().trim();
@@ -877,6 +941,26 @@
       `;
     }
 
+    function qgisPopupHTML(feature, fallbackLabel = 'Layer QGIS2Web'){
+      const props = feature.properties || {};
+      const name = props.name || props.Nama || props.nama || fallbackLabel;
+      const firstKeys = Object.keys(props).slice(0, 10);
+
+      const detailRows = firstKeys.map(key => {
+        const value = props[key];
+        if (value === null || value === undefined || value === '') return '';
+        return `<div style="margin-top:6px;"><b>${key}</b>: ${value}</div>`;
+      }).join('');
+
+      return `
+        <div class="popup-card">
+          <div style="font-size:18px;font-weight:700;color:#0f172a;">🗺️ ${name}</div>
+          <div class="popup-kategori">${fallbackLabel}</div>
+          <div class="popup-alamat">${detailRows || 'Data atribut tersedia.'}</div>
+        </div>
+      `;
+    }
+
     window.setRouteTo = function(lng, lat){
       const destination = [lng, lat];
 
@@ -919,9 +1003,9 @@
 
       cloned.features = (cloned.features || []).map(feature => {
         const props = feature.properties || {};
-        const nama = getProp(props, ['nama','name','Nama'], '');
-        const kategori = getProp(props, ['kategori','category','Kategori'], categoryKey);
-        const alamat = getProp(props, ['alamat','Alamat','address'], '');
+        const nama = getProp(props, ['nama', 'name', 'Nama'], '');
+        const kategori = getProp(props, ['kategori', 'category', 'Kategori'], categoryKey);
+        const alamat = getProp(props, ['alamat', 'Alamat', 'address'], '');
         const searchBlob = normalizeText([nama, kategori, alamat, cfg.searchTerms.join(' '), categoryKey].join(' '));
 
         feature.properties = {
@@ -949,6 +1033,16 @@
       const res = await fetch(url);
       if(!res.ok) throw new Error(`Gagal memuat ${url}`);
       return await res.json();
+    }
+
+    function loadQgisDataFromWindow() {
+      qgisLayerConfig.forEach(layer => {
+        if (window[layer.varName]) {
+          qgisStore[layer.key] = window[layer.varName];
+        } else {
+          console.warn(`Data ${layer.varName} tidak ditemukan.`);
+        }
+      });
     }
 
     function getLayerIdsByCategory(categoryKey){
@@ -1033,6 +1127,129 @@
       });
     }
 
+    function getQgisLayerIds(layerKey) {
+      return {
+        polygonFill: `${layerKey}-polygon-fill`,
+        polygonOutline: `${layerKey}-polygon-outline`,
+        point: `${layerKey}-point`
+      };
+    }
+
+    function qgisHasPolygonFeatures(data) {
+      return (data?.features || []).some(f =>
+        f.geometry &&
+        (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon')
+      );
+    }
+
+    function qgisHasPointFeatures(data) {
+      return (data?.features || []).some(f =>
+        f.geometry &&
+        (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint')
+      );
+    }
+
+    function addQgisPopupEvents(layerId, label) {
+      map.on('click', layerId, (e) => {
+        const feature = e.features && e.features[0];
+        if (!feature) return;
+
+        new mapboxgl.Popup({ offset: 10 })
+          .setLngLat(e.lngLat)
+          .setHTML(qgisPopupHTML(feature, label))
+          .addTo(map);
+      });
+
+      map.on('mouseenter', layerId, () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', layerId, () => {
+        map.getCanvas().style.cursor = '';
+      });
+    }
+
+    function addQgisLayers(layerKey, sourceId, color) {
+      const ids = getQgisLayerIds(layerKey);
+      const data = qgisStore[layerKey];
+      const label = layerKey.replaceAll('_', ' ');
+
+      if (qgisHasPolygonFeatures(data)) {
+        if (!map.getLayer(ids.polygonFill)) {
+          map.addLayer({
+            id: ids.polygonFill,
+            type: 'fill',
+            source: sourceId,
+            filter: [
+              'any',
+              ['==', ['geometry-type'], 'Polygon'],
+              ['==', ['geometry-type'], 'MultiPolygon']
+            ],
+            paint: {
+              'fill-color': color,
+              'fill-opacity': 0.28
+            }
+          });
+          addQgisPopupEvents(ids.polygonFill, label);
+        }
+
+        if (!map.getLayer(ids.polygonOutline)) {
+          map.addLayer({
+            id: ids.polygonOutline,
+            type: 'line',
+            source: sourceId,
+            filter: [
+              'any',
+              ['==', ['geometry-type'], 'Polygon'],
+              ['==', ['geometry-type'], 'MultiPolygon']
+            ],
+            paint: {
+              'line-color': color,
+              'line-width': 1.6
+            }
+          });
+        }
+      }
+
+      if (qgisHasPointFeatures(data)) {
+        if (!map.getLayer(ids.point)) {
+          map.addLayer({
+            id: ids.point,
+            type: 'circle',
+            source: sourceId,
+            filter: [
+              'any',
+              ['==', ['geometry-type'], 'Point'],
+              ['==', ['geometry-type'], 'MultiPoint']
+            ],
+            paint: {
+              'circle-color': color,
+              'circle-radius': 5,
+              'circle-stroke-width': 1.2,
+              'circle-stroke-color': '#ffffff'
+            }
+          });
+          addQgisPopupEvents(ids.point, label);
+        }
+      }
+    }
+
+    function ensureQgisSourcesAndLayers() {
+      qgisLayerConfig.forEach(layer => {
+        const data = qgisStore[layer.key];
+        if (!data) return;
+
+        if (!map.getSource(layer.sourceId)) {
+          map.addSource(layer.sourceId, {
+            type: 'geojson',
+            data: data
+          });
+        }
+
+        addQgisLayers(layer.key, layer.sourceId, layer.color);
+      });
+    }
+
     function createEmojiElement(categoryKey){
       const cfg = categoryConfig[categoryKey];
       const el = document.createElement('div');
@@ -1114,6 +1331,42 @@
       });
 
       applyMarkerVisibilityByState(document.getElementById('searchBox').value);
+    }
+
+    function setLayerVisibilityByMode(mode) {
+      currentLayerMode = mode;
+
+      const showHealth = mode === 'health' || mode === 'overlay';
+      const showQgis = mode === 'qgis' || mode === 'overlay';
+
+      Object.entries(categoryConfig).forEach(([categoryKey, cfg]) => {
+        const ids = getLayerIdsByCategory(categoryKey);
+
+        [ids.polygonFill, ids.polygonOutline, ids.point].forEach(layerId => {
+          if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', showHealth ? 'visible' : 'none');
+          }
+        });
+
+        htmlMarkers[categoryKey].forEach(item => {
+          item.element.style.display = showHealth ? 'flex' : 'none';
+        });
+      });
+
+      qgisLayerConfig.forEach(layer => {
+        const ids = getQgisLayerIds(layer.key);
+
+        [ids.polygonFill, ids.polygonOutline, ids.point].forEach(layerId => {
+          if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', showQgis ? 'visible' : 'none');
+          }
+        });
+      });
+
+      if (showHealth) {
+        applyCheckboxVisibility();
+        applySearch(document.getElementById('searchBox').value);
+      }
     }
 
     function getAllSearchableLayerIds(){
@@ -1257,9 +1510,12 @@
 
     function restoreMapState(afterStyleChange=false){
       ensureSourcesAndLayers();
+      ensureQgisSourcesAndLayers();
       applyCheckboxVisibility();
       applySearch(document.getElementById('searchBox').value);
       updateStats(document.getElementById('searchBox').value);
+      setLayerVisibilityByMode(currentLayerMode);
+
       if(!afterStyleChange){
         map.jumpTo({ center:soloCenter, zoom:11.8 });
       }
@@ -1296,8 +1552,13 @@
         restoreMapState(true);
         buildHtmlMarkers();
         applyMarkerVisibilityByState(document.getElementById('searchBox').value);
+        setLayerVisibilityByMode(currentLayerMode);
         restoreDirectionsRoute();
       });
+    });
+
+    document.getElementById('layerModeSelect').addEventListener('change', function () {
+      setLayerVisibilityByMode(this.value);
     });
 
     map.on('load', async () => {
@@ -1314,17 +1575,21 @@
         geojsonStore.klinik = enrichGeoJSONFeatures('klinik', klinikRaw);
         geojsonStore.rs = enrichGeoJSONFeatures('rs', rsRaw);
 
+        loadQgisDataFromWindow();
+
         restoreMapState(false);
         buildHtmlMarkers();
         applyMarkerVisibilityByState('');
         updateStats('');
+        setLayerVisibilityByMode('health');
+
       } catch(error){
         console.error(error);
-        alert('Data GeoJSON gagal dimuat. Cek nama file, path assets/geojson/, dan tipe geometrinya.');
+        alert('Data GeoJSON gagal dimuat. Cek path assets/geojson/ dan file qgis2web pada folder data/.');
       }
     });
 
     map.on('error', (e) => console.error('Mapbox error:', e));
   </script>
 </body>
-</html> 
+</html>

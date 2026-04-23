@@ -1,1313 +1,1058 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fasilitas Kesehatan Kota Surakarta</title>
 
-<title>Fasilitas Kesehatan Kota Surakarta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" rel="stylesheet">
 
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" rel="stylesheet">
-
-<style>
-body{
-    margin:0;
-    font-family:'Poppins', sans-serif;
-    scroll-behavior:smooth;
-    background:#f8fafc;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    width:100%;
-    height:58px;
-    background:linear-gradient(90deg, rgba(15,23,42,0.94), rgba(30,41,59,0.94));
-    backdrop-filter: blur(12px);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:20;
-    font-weight:600;
-    font-size:15px;
-    letter-spacing:0.2px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.14);
-}
-
-.hero{
-    height:100vh;
-    background:
-    radial-gradient(circle at top right, rgba(230,57,70,0.18), transparent 22%),
-    linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.82)),
-    url('assets/image/Surakarta.jpg');
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:white;
-    position:relative;
-}
-
-.hero-content{
-    max-width:760px;
-    padding:0 20px;
-}
-
-.hero h1{
-    font-size:46px;
-    margin-bottom:10px;
-    line-height:1.1;
-    text-shadow:0 10px 25px rgba(0,0,0,0.25);
-}
-.hero p{
-    margin:0;
-    font-size:17px;
-    opacity:0.92;
-}
-
-.btn-start{
-    margin-top:22px;
-    padding:13px 22px;
-    background:#e63946;
-    border:none;
-    color:white;
-    border-radius:14px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 12px 24px rgba(230,57,70,0.26);
-    transition:all 0.25s ease;
-}
-.btn-start:hover{
-    background:#c1121f;
-    transform:translateY(-2px);
-}
-
-.map-section{
-    height:100vh;
-    position:relative;
-}
-
-#map{
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:100%;
-}
-
-.glass-card{
-    background:rgba(255,255,255,0.88);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,0.55);
-    box-shadow:0 10px 24px rgba(15,23,42,0.12);
-}
-
-.layer-control{
-    position:absolute;
-    top:78px;
-    left:14px;
-    width:245px;
-    padding:14px 16px;
-    border-radius:18px;
-    z-index:5;
-    line-height:1.55;
-    transition:all 0.25s ease;
-}
-.layer-control:hover{
-    transform:translateY(-2px);
-    box-shadow:0 14px 30px rgba(15,23,42,0.16);
-}
-
-.panel-title{
-    font-size:16px;
-    font-weight:700;
-    color:#0f172a;
-    margin-bottom:4px;
-}
-
-.panel-subtitle{
-    font-size:11px;
-    color:#64748b;
-    margin-bottom:10px;
-    line-height:1.55;
-}
-
-.panel-label{
-    position:absolute;
-    left:14px;
-    z-index:6;
-    font-size:10px;
-    font-weight:600;
-    color:#334155;
-    background:rgba(255,255,255,0.94);
-    padding:5px 10px;
-    border-radius:999px;
-    border:1px solid rgba(148,163,184,0.18);
-    box-shadow:0 6px 16px rgba(15,23,42,0.08);
-    backdrop-filter:blur(8px);
-}
-
-.search-label{ top:345px; }
-.basemap-label{ top:415px; }
-
-#searchBox{
-    position:absolute;
-    top:372px;
-    left:14px;
-    z-index:5;
-    width:245px;
-    padding:11px 14px 11px 42px;
-    border-radius:14px;
-    border:none;
-    box-shadow:0 8px 18px rgba(15,23,42,0.10);
-    font-family:'Poppins', sans-serif;
-    background:rgba(255,255,255,0.94);
-    transition:all 0.25s ease;
-}
-#searchBox:focus,
-#basemapSelect:focus{
-    outline:none;
-    box-shadow:0 10px 22px rgba(29,53,87,0.16);
-}
-
-.search-wrap{
-    position:absolute;
-    top:372px;
-    left:14px;
-    z-index:6;
-    pointer-events:none;
-    width:245px;
-    height:42px;
-}
-.search-icon{
-    position:absolute;
-    left:14px;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:15px;
-    opacity:0.65;
-}
-
-#basemapSelect{
-    position:absolute;
-    top:442px;
-    left:14px;
-    z-index:5;
-    width:275px;
-    padding:11px 14px;
-    border-radius:14px;
-    border:none;
-    box-shadow:0 8px 18px rgba(15,23,42,0.10);
-    font-family:'Poppins', sans-serif;
-    background:rgba(255,255,255,0.94);
-    transition:all 0.25s ease;
-}
-
-#fly,
-#backHome{
-    position:absolute;
-    top:76px;
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:12px;
-    z-index:7;
-    cursor:pointer;
-    font-family:'Poppins', sans-serif;
-    font-size:13px;
-    font-weight:600;
-    transition:all 0.25s ease;
-    box-shadow:0 10px 18px rgba(15,23,42,0.16);
-    min-width:96px;
-    text-align:center;
-}
-#fly:hover,
-#backHome:hover{
-    transform:translateY(-2px);
-}
-
-#fly{
-    right:14px;
-    background:#e63946;
-}
-
-#backHome{
-    right:124px;
-    background:#1d3557;
-}
-
-.legend{
-    position:absolute;
-    bottom:18px;
-    left:14px;
-    padding:12px 14px;
-    border-radius:16px;
-    font-size:13px;
-    z-index:5;
-    box-shadow:0 10px 24px rgba(15,23,42,0.12);
-    min-width:185px;
-}
-
-.legend b{
-    display:block;
-    margin-bottom:6px;
-    color:#0f172a;
-}
-
-.legend-item{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:6px;
-}
-
-.legend-color{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    display:inline-block;
-    flex:0 0 10px;
-}
-
-.legend-emoji{
-    font-size:14px;
-    line-height:1;
-    width:18px;
-    text-align:center;
-}
-
-.legend-text{
-    flex:1;
-    color:#1e293b;
-}
-
-.stats-bar{
-    position:absolute;
-    top:78px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:6;
-    display:flex;
-    gap:8px;
-    align-items:stretch;
-    justify-content:center;
-    flex-wrap:wrap;
-    width:calc(100% - 690px);
-    max-width:840px;
-}
-
-.stat-chip{
-    background:rgba(255,255,255,0.88);
-    border:1px solid rgba(255,255,255,0.65);
-    border-radius:16px;
-    padding:7px 12px;
-    box-shadow:0 8px 18px rgba(15,23,42,0.08);
-    backdrop-filter:blur(10px);
-    min-width:112px;
-    transition:all 0.25s ease;
-}
-.stat-chip:hover{
-    transform:translateY(-2px);
-}
-
-.stat-label{
-    font-size:10px;
-    color:#64748b;
-    margin-bottom:2px;
-    font-weight:600;
-}
-
-.stat-value{
-    font-size:14px;
-    font-weight:700;
-    color:#0f172a;
-    line-height:1.1;
-}
-
-.result-badge{
-    position:absolute;
-    top:132px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:6;
-    padding:7px 13px;
-    border-radius:999px;
-    background:rgba(15,23,42,0.84);
-    color:white;
-    font-size:12px;
-    box-shadow:0 10px 24px rgba(15,23,42,0.16);
-    display:none;
-}
-
-.mapboxgl-ctrl-top-left{
-    top:78px !important;
-}
-
-.mapboxgl-ctrl-top-right{
-    top:132px !important;
-    right:14px !important;
-}
-
-.mapboxgl-ctrl-directions {
-    width:320px !important;
-    max-width:320px !important;
-    background: rgba(255,255,255,0.95) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 12px 26px rgba(0,0,0,0.18) !important;
-    font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(10px);
-    z-index:6 !important;
-}
-
-.mapboxgl-ctrl-directions input {
-    border-radius: 10px !important;
-    border: none !important;
-    padding: 8px !important;
-    background: #f1f5f9 !important;
-    font-size: 13px;
-}
-
-.mapboxgl-ctrl-directions .directions-icon {
-    border-radius: 8px !important;
-}
-
-.mapboxgl-ctrl-directions .mapbox-directions-origin .directions-icon {
-    background: #2a9d8f !important;
-    color: white !important;
-}
-
-.mapboxgl-ctrl-directions .mapbox-directions-destination .directions-icon {
-    background: #e63946 !important;
-    color: white !important;
-}
-
-.mapboxgl-ctrl-directions .directions-profile {
-    border-radius: 10px !important;
-    overflow: hidden;
-    background: #e5e7eb;
-}
-
-.mapboxgl-ctrl-directions .directions-profile label {
-    font-size: 12px;
-}
-
-.mapboxgl-ctrl-directions .directions-profile input:checked + label {
-    background: #1d3557 !important;
-    color: white !important;
-}
-
-.mapboxgl-ctrl-directions button:hover {
-    opacity: 0.85;
-}
-
-.popup-card{
-    font-family:Poppins,sans-serif;
-    min-width:230px;
-}
-.popup-kategori{
-    display:inline-block;
-    margin-top:6px;
-    margin-bottom:8px;
-    padding:4px 10px;
-    border-radius:999px;
-    font-size:11px;
-    background:#f1f5f9;
-    color:#334155;
-}
-.popup-alamat{
-    color:#475569;
-    font-size:13px;
-    line-height:1.55;
-}
-.popup-button{
-    margin-top:12px;
-    background:#1d3557;
-    color:#fff;
-    border:none;
-    padding:9px 12px;
-    border-radius:10px;
-    cursor:pointer;
-    font-family:Poppins,sans-serif;
-    width:100%;
-}
-
-.mapbox-directions-route-line {
-    line-opacity: 0.95 !important;
-}
-
-.mapbox-directions-route-line-alt {
-    line-opacity: 0.45 !important;
-}
-
-.custom-copyright{
-    position:fixed;
-    bottom:10px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:4;
-    font-size:11px;
-    font-weight:500;
-    color:#475569;
-    background:rgba(255,255,255,0.78);
-    backdrop-filter:blur(8px);
-    padding:6px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.55);
-    box-shadow:0 6px 14px rgba(15,23,42,0.08);
-    pointer-events:none;
-    white-space:nowrap;
-}
-
-@media (max-width: 1280px){
-    .stats-bar{
-        width:calc(100% - 640px);
-        max-width:760px;
-        gap:8px;
+  <style>
+    :root{
+      --primary:#1d3557;
+      --secondary:#e63946;
+      --accent:#2a9d8f;
+      --light:#f8fafc;
+      --card:#ffffff;
+      --muted:#64748b;
+      --text:#0f172a;
+      --shadow:0 10px 30px rgba(15,23,42,0.12);
+      --radius:20px;
     }
 
-    .stat-chip{
-        min-width:100px;
-        padding:7px 10px;
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:var(--light);
+      color:var(--text);
     }
 
-    .mapboxgl-ctrl-directions{
-        width:290px !important;
-        max-width:290px !important;
+    .navbar{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      background:rgba(15,23,42,0.92);
+      backdrop-filter:blur(12px);
+      color:#fff;
+      z-index:1000;
+      box-shadow:0 8px 24px rgba(0,0,0,0.16);
     }
-}
 
-@media (max-width: 1024px){
-    .stats-bar{
-        left:50%;
-        transform:translateX(-50%);
-        width:calc(100% - 40px);
-        top:78px;
-        flex-wrap:wrap;
+    .brand{
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:.2px;
     }
+
+    .nav-links{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .nav-links a,
+    .btn{
+      text-decoration:none;
+      border:none;
+      border-radius:12px;
+      padding:10px 16px;
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+
+    .btn-outline{
+      background:rgba(255,255,255,0.1);
+      color:#fff;
+    }
+
+    .btn-primary{
+      background:var(--secondary);
+      color:#fff;
+      box-shadow:0 10px 24px rgba(230,57,70,0.28);
+    }
+
+    .btn:hover,
+    .nav-links a:hover{
+      transform:translateY(-2px);
+    }
+
+    .hero{
+      min-height:100vh;
+      padding:110px 24px 60px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:32px;
+      align-items:center;
+      background:
+        radial-gradient(circle at top right, rgba(230,57,70,.18), transparent 24%),
+        linear-gradient(135deg, rgba(15,23,42,.95), rgba(29,53,87,.88));
+      color:#fff;
+    }
+
+    .hero-copy{
+      max-width:640px;
+      margin:0 auto;
+    }
+
+    .hero-kicker{
+      display:inline-block;
+      margin-bottom:12px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .hero h1{
+      margin:0 0 14px;
+      font-size:48px;
+      line-height:1.08;
+    }
+
+    .hero p{
+      margin:0 0 24px;
+      font-size:16px;
+      line-height:1.8;
+      color:rgba(255,255,255,.88);
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .hero-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:28px;
+      padding:24px;
+      backdrop-filter:blur(12px);
+      box-shadow:0 20px 40px rgba(0,0,0,.18);
+      max-width:520px;
+      margin:0 auto;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+
+    .hero-stat{
+      background:rgba(255,255,255,.1);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .hero-stat small{
+      display:block;
+      color:rgba(255,255,255,.72);
+      margin-bottom:6px;
+      font-size:12px;
+    }
+
+    .hero-stat strong{
+      font-size:28px;
+      line-height:1;
+    }
+
+    .section-header{
+      max-width:1200px;
+      margin:0 auto 24px;
+      padding:0 24px;
+    }
+
+    .section-header h2{
+      margin:0 0 8px;
+      font-size:34px;
+      color:var(--text);
+    }
+
+    .section-header p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .map-section{
+      padding:44px 0 56px;
+      background:#eef4f8;
+    }
+
+    .map-layout{
+      max-width:1400px;
+      margin:0 auto;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:20px;
+      align-items:start;
+    }
+
+    .sidebar{
+      position:sticky;
+      top:88px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      border:1px solid rgba(226,232,240,.95);
+    }
+
+    .card h3{
+      margin:0 0 6px;
+      font-size:18px;
+    }
+
+    .card p,
+    .card label,
+    .card li{
+      color:#334155;
+      line-height:1.65;
+      font-size:14px;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .filter-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .filter-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+    }
+
+    .search-box,
+    select{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid #dbe4ee;
+      background:#f8fafc;
+      font-family:'Poppins',sans-serif;
+      font-size:14px;
+      margin-top:12px;
+    }
+
+    .search-box:focus,
+    select:focus{
+      outline:none;
+      border-color:#93c5fd;
+      box-shadow:0 0 0 4px rgba(59,130,246,.12);
+    }
+
+    .legend-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      flex:0 0 12px;
+    }
+
+    .map-wrapper{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      min-width:0;
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+
+    .stat-card{
+      background:#fff;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(226,232,240,.95);
+    }
+
+    .stat-card span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:600;
+    }
+
+    .stat-card strong{
+      font-size:24px;
+      color:var(--text);
+    }
+
+    .map-card{
+      position:relative;
+      background:#fff;
+      border-radius:26px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      min-height:780px;
+      overflow:hidden;
+      border:1px solid rgba(226,232,240,.95);
+    }
+
+    #map{
+      width:100%;
+      height:750px;
+      border-radius:20px;
+    }
+
+    .floating-actions{
+      position:absolute;
+      top:28px;
+      right:28px;
+      z-index:20;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .floating-actions button{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      cursor:pointer;
+      color:#fff;
+      box-shadow:0 8px 18px rgba(15,23,42,.14);
+    }
+
+    #backHome{background:var(--primary);}
+    #fly{background:var(--secondary);}
 
     .result-badge{
-        left:50%;
-        transform:translateX(-50%);
+      position:absolute;
+      top:28px;
+      left:28px;
+      z-index:20;
+      display:none;
+      background:rgba(15,23,42,.88);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:12px;
+      box-shadow:0 12px 24px rgba(15,23,42,.16);
     }
+
+    .custom-copyright{
+      text-align:center;
+      padding:18px 24px 34px;
+      font-size:12px;
+      color:#64748b;
+    }
+
+    .mapboxgl-ctrl-top-left{top:14px !important; left:14px !important;}
+    .mapboxgl-ctrl-top-right{top:84px !important; right:14px !important;}
 
     .mapboxgl-ctrl-directions{
-        width:260px !important;
-        max-width:260px !important;
+      width:320px !important;
+      max-width:320px !important;
+      background:rgba(255,255,255,.96) !important;
+      border-radius:18px !important;
+      box-shadow:0 14px 28px rgba(0,0,0,.14) !important;
+      font-family:'Poppins',sans-serif;
+      overflow:hidden;
     }
 
-    #fly,
-    #backHome{
-        top:76px;
-    }
-}
-
-@media (max-width: 900px){
-    .hero h1{
-        font-size:34px;
+    .mapboxgl-ctrl-directions input{
+      background:#f8fafc !important;
+      border:none !important;
+      font-size:13px;
     }
 
-    .layer-control{
-        width:220px;
+    .popup-card{
+      font-family:'Poppins',sans-serif;
+      min-width:220px;
     }
 
-    #searchBox{
-        width:220px;
+    .popup-kategori{
+      display:inline-block;
+      margin:8px 0;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#f1f5f9;
+      color:#334155;
+      font-size:11px;
     }
 
-    .search-wrap{
-        width:220px;
+    .popup-alamat{
+      color:#475569;
+      font-size:13px;
+      line-height:1.6;
     }
 
-    #basemapSelect{
-        width:250px;
+    .popup-button{
+      margin-top:12px;
+      width:100%;
+      border:none;
+      background:var(--primary);
+      color:#fff;
+      border-radius:10px;
+      padding:10px 12px;
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      cursor:pointer;
     }
 
-    .stats-bar{
-        width:calc(100% - 30px);
+    @media (max-width:1200px){
+      .hero{grid-template-columns:1fr; text-align:center;}
+      .hero-actions{justify-content:center;}
+      .map-layout{grid-template-columns:1fr;}
+      .sidebar{position:static;}
+      .topbar{grid-template-columns:repeat(3,1fr);}
     }
-}
-</style>
+
+    @media (max-width:900px){
+      .navbar{padding:0 14px;}
+      .brand{font-size:14px;}
+      .nav-links{display:none;}
+      .hero h1{font-size:36px;}
+      .section-header h2{font-size:28px;}
+      .topbar{grid-template-columns:repeat(2,1fr);}
+      .map-card{min-height:620px;}
+      #map{height:590px;}
+      .floating-actions{
+        top:auto;
+        bottom:24px;
+        right:24px;
+      }
+      .mapboxgl-ctrl-top-right{
+        top:14px !important;
+        right:14px !important;
+      }
+      .mapboxgl-ctrl-directions{
+        width:280px !important;
+        max-width:280px !important;
+      }
+    }
+
+    @media (max-width:640px){
+      .hero{padding:96px 18px 40px;}
+      .hero-stats{grid-template-columns:1fr;}
+      .map-layout,
+      .section-header{padding-left:16px; padding-right:16px;}
+      .topbar{grid-template-columns:1fr;}
+      .floating-actions{left:24px; right:24px;}
+      .floating-actions button{flex:1;}
+      .result-badge{left:16px; right:16px; width:auto; border-radius:14px;}
+      #map{height:520px;}
+      .map-card{padding:10px; min-height:550px;}
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="navbar">
-    WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya
-</div>
-
-<section class="hero">
-<div class="hero-content">
-    <h1>Fasilitas Kesehatan</h1>
-    <p>Kota Surakarta dan Sekitarnya</p>
-    <a href="#mapSection">
-        <button class="btn-start">Selengkapnya</button>
-    </a>
-</div>
-</section>
-
-<section class="map-section" id="mapSection">
-
-<div class="stats-bar" id="statsBar">
-    <div class="stat-chip">
-        <div class="stat-label">Total Tampil</div>
-        <div class="stat-value" id="statTotal">0</div>
+  <header class="navbar">
+    <div class="brand">WebGIS Fasilitas Kesehatan Kota Surakarta</div>
+    <div class="nav-links">
+      <a href="#beranda" class="btn btn-outline">Beranda</a>
+      <a href="#mapSection" class="btn btn-primary">Lihat Peta</a>
     </div>
-    <div class="stat-chip">
-        <div class="stat-label">Apotek</div>
-        <div class="stat-value" id="statApotek">0</div>
+  </header>
+
+  <section class="hero" id="beranda">
+    <div class="hero-copy">
+      <div class="hero-kicker">WebGIS Kesehatan Kota Surakarta</div>
+      <h1>Informasi fasilitas kesehatan lebih rapi, jelas, dan mudah dipakai</h1>
+      <p>
+        Halaman pertama dipakai untuk pengantar, sedangkan peta dan semua kontrol utama dipindahkan ke halaman kedua.
+        Jadi tampilan tidak numpuk dan pengguna bisa fokus dulu ke informasi utama lalu lanjut ke peta interaktif.
+      </p>
+      <div class="hero-actions">
+        <a href="#mapSection" class="btn btn-primary">Buka Halaman Peta</a>
+        <button class="btn btn-outline" onclick="window.scrollTo({top: document.getElementById('mapSection').offsetTop, behavior:'smooth'})">Jelajahi Sekarang</button>
+      </div>
     </div>
-    <div class="stat-chip">
-        <div class="stat-label">Dokter Gigi</div>
-        <div class="stat-value" id="statDokter">0</div>
+
+    <div class="hero-card">
+      <h3 style="margin-top:0; margin-bottom:14px;">Ringkasan Data</h3>
+      <div class="hero-stats">
+        <div class="hero-stat"><small>Total fasilitas</small><strong id="heroTotal">43</strong></div>
+        <div class="hero-stat"><small>Rumah sakit</small><strong id="heroRs">23</strong></div>
+        <div class="hero-stat"><small>Klinik</small><strong id="heroKlinik">13</strong></div>
+        <div class="hero-stat"><small>Apotek & dokter</small><strong id="heroLain">7</strong></div>
+      </div>
     </div>
-    <div class="stat-chip">
-        <div class="stat-label">Klinik</div>
-        <div class="stat-value" id="statKlinik">0</div>
+  </section>
+
+  <section class="map-section" id="mapSection">
+    <div class="section-header">
+      <h2>Peta Interaktif Fasilitas Kesehatan</h2>
+      <p>Panel kontrol diletakkan di sisi kiri, statistik di bagian atas, dan area peta dibuat lebih lega agar elemen tidak saling bertumpuk.</p>
     </div>
-    <div class="stat-chip">
-        <div class="stat-label">Rumah Sakit</div>
-        <div class="stat-value" id="statRs">0</div>
+
+    <div class="map-layout">
+      <aside class="sidebar">
+        <div class="card">
+          <h3>Filter Fasilitas</h3>
+          <p class="muted">Pilih kategori yang ingin ditampilkan pada peta.</p>
+          <div class="filter-list">
+            <label class="filter-item"><input type="checkbox" id="apotek" checked> Apotek</label>
+            <label class="filter-item"><input type="checkbox" id="dokter" checked> Dokter Gigi</label>
+            <label class="filter-item"><input type="checkbox" id="klinik" checked> Klinik</label>
+            <label class="filter-item"><input type="checkbox" id="rs" checked> Rumah Sakit</label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Pencarian</h3>
+          <p class="muted">Cari fasilitas berdasarkan nama, kategori, atau alamat.</p>
+          <input type="text" id="searchBox" class="search-box" placeholder="Cari fasilitas...">
+        </div>
+
+        <div class="card">
+          <h3>Tampilan Peta</h3>
+          <p class="muted">Pilih basemap yang ingin digunakan.</p>
+          <select id="basemapSelect">
+            <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+            <option value="mapbox://styles/mapbox/light-v11">Light</option>
+            <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+            <option value="mapbox://styles/mapbox/outdoors-v12" selected>Outdoors</option>
+            <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+            <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <h3>Legenda</h3>
+          <div class="legend-list">
+            <div class="legend-item"><span class="dot" style="background:#2a9d8f"></span> 💊 Apotek</div>
+            <div class="legend-item"><span class="dot" style="background:#f4a261"></span> 🦷 Dokter Gigi</div>
+            <div class="legend-item"><span class="dot" style="background:#457b9d"></span> 🩺 Klinik</div>
+            <div class="legend-item"><span class="dot" style="background:#e63946"></span> 🏥 Rumah Sakit</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="map-wrapper">
+        <div class="topbar" id="statsBar">
+          <div class="stat-card"><span>Total Tampil</span><strong id="statTotal">0</strong></div>
+          <div class="stat-card"><span>Apotek</span><strong id="statApotek">0</strong></div>
+          <div class="stat-card"><span>Dokter Gigi</span><strong id="statDokter">0</strong></div>
+          <div class="stat-card"><span>Klinik</span><strong id="statKlinik">0</strong></div>
+          <div class="stat-card"><span>Rumah Sakit</span><strong id="statRs">0</strong></div>
+        </div>
+
+        <div class="map-card">
+          <div class="result-badge" id="resultBadge">Menampilkan 0 hasil</div>
+          <div class="floating-actions">
+            <button id="backHome">← Home</button>
+            <button id="fly">Ke Pusat</button>
+          </div>
+          <div id="map"></div>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
 
-<div class="result-badge" id="resultBadge">Menampilkan 0 hasil</div>
-
-<div class="panel-label search-label">Pencarian fasilitas</div>
-<div class="search-wrap"><span class="search-icon">🔎</span></div>
-<input type="text" id="searchBox" placeholder="Cari fasilitas...">
-
-<div class="panel-label basemap-label">Pilih tampilan peta</div>
-<select id="basemapSelect">
-    <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
-    <option value="mapbox://styles/mapbox/light-v11">Light</option>
-    <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
-    <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
-    <option value="mapbox://styles/mapbox/satellite-v9" selected>Satellite</option>
-    <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
-</select>
-
-<div id="map"></div>
-
-<button id="fly">Ke Pusat</button>
-<button id="backHome">← Home</button>
-
-<div class="layer-control glass-card">
-    <div class="panel-title">Filter Fasilitas</div>
-    <div class="panel-subtitle">Pilih kategori untuk menampilkan fasilitas kesehatan pada peta</div>
-    <input type="checkbox" id="apotek" checked> Apotek<br>
-    <input type="checkbox" id="dokter" checked> Dokter Gigi<br>
-    <input type="checkbox" id="klinik" checked> Klinik<br>
-    <input type="checkbox" id="rs" checked> Rumah Sakit<br>
-</div>
-
-<div class="legend glass-card">
-  <b>Legenda</b>
-
-  <div class="legend-item">
-    <span class="legend-color" style="background:#2a9d8f"></span>
-    <span class="legend-emoji">💊</span>
-    <span class="legend-text">Apotek</span>
+  <div class="custom-copyright">
+    © 2026 WebGIS Fasilitas Kesehatan Surakarta - Eka Pungky Aprillia - 117230034
   </div>
 
-  <div class="legend-item">
-    <span class="legend-color" style="background:#f4a261"></span>
-    <span class="legend-emoji">🦷</span>
-    <span class="legend-text">Dokter Gigi</span>
-  </div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZmlyZGFhdWxpeWFyYWhtYSIsImEiOiJjbW5wdnI2eWQwMHZ4MzBwc2E5aGNkbm1oIn0.jLkgH9Y1ywcPyrg19wPi9w';
 
-  <div class="legend-item">
-    <span class="legend-color" style="background:#457b9d"></span>
-    <span class="legend-emoji">🩺</span>
-    <span class="legend-text">Klinik</span>
-  </div>
+    const soloCenter = [110.82409,-7.57251];
 
-  <div class="legend-item">
-    <span class="legend-color" style="background:#e63946"></span>
-    <span class="legend-emoji">🏥</span>
-    <span class="legend-text">Rumah Sakit</span>
-  </div>
-</div>
-
-</section>
-
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiZmlyZGFhdWxpeWFyYWhtYSIsImEiOiJjbW5wdnI2eWQwMHZ4MzBwc2E5aGNkbm1oIn0.jLkgH9Y1ywcPyrg19wPi9w';
-
-const soloCenter = [110.82409,-7.57251];
-
-const categoryConfig = {
-    apotek: {
+    const categoryConfig = {
+      apotek: {
         checkboxId: 'apotek',
         sourceId: 'apotek',
         file: 'assets/geojson/Apotek.geojson',
         color: '#2a9d8f',
         iconText: '💊',
         searchTerms: ['apotek', 'obat', 'farmasi', 'pharmacy']
-    },
-    dokter: {
+      },
+      dokter: {
         checkboxId: 'dokter',
         sourceId: 'dokter',
         file: 'assets/geojson/Dokter%20Gigi.geojson',
         color: '#f4a261',
         iconText: '🦷',
         searchTerms: ['dokter', 'dokter gigi', 'gigi', 'dentist']
-    },
-    klinik: {
+      },
+      klinik: {
         checkboxId: 'klinik',
         sourceId: 'klinik',
         file: 'assets/geojson/Klinik.geojson',
         color: '#457b9d',
         iconText: '🩺',
         searchTerms: ['klinik', 'clinic']
-    },
-    rs: {
+      },
+      rs: {
         checkboxId: 'rs',
         sourceId: 'rs',
         file: 'assets/geojson/Rumah%20Sakit.geojson',
         color: '#e63946',
         iconText: '🏥',
         searchTerms: ['rumah sakit', 'rs', 'hospital']
-    }
-};
+      }
+    };
 
-const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/outdoors-v12',
-    center: [110.82409, -7.57251],
-    zoom: 11.8
-});
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/outdoors-v12',
+      center: soloCenter,
+      zoom: 11.8
+    });
 
-map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
-const directions = new MapboxDirections({
-    accessToken: mapboxgl.accessToken,
-    unit: 'metric',
-    profile: 'mapbox/driving',
-    language: 'id',
-    controls: {
-        instructions: true,
-        profileSwitcher: true
-    }
-});
-map.addControl(directions, 'top-right');
+    const directions = new MapboxDirections({
+      accessToken: mapboxgl.accessToken,
+      unit: 'metric',
+      profile: 'mapbox/driving',
+      language: 'id',
+      controls: { instructions: true, profileSwitcher: true }
+    });
+    map.addControl(directions, 'top-right');
 
-let geojsonStore = {
-    apotek: null,
-    dokter: null,
-    klinik: null,
-    rs: null
-};
+    let geojsonStore = { apotek:null, dokter:null, klinik:null, rs:null };
+    let popup = null;
+    let currentRouteState = { origin:null, destination:null };
+    let htmlMarkers = { apotek:[], dokter:[], klinik:[], rs:[] };
 
-let popup = null;
-let currentRouteState = {
-    origin: null,
-    destination: null
-};
-let htmlMarkers = {
-    apotek: [],
-    dokter: [],
-    klinik: [],
-    rs: []
-};
+    function normalizeText(text){ return String(text || '').toLowerCase().trim(); }
 
-function normalizeText(text) {
-    return String(text || '').toLowerCase().trim();
-}
-
-function getProp(props, keys, fallback = '') {
-    for (const key of keys) {
-        if (props && props[key] !== undefined && props[key] !== null && props[key] !== '') {
-            return props[key];
-        }
-    }
-    return fallback;
-}
-
-function getFeatureName(feature) {
-    return getProp(feature.properties, ['nama', 'name', 'Nama'], 'Fasilitas');
-}
-
-function getFeatureCategory(feature) {
-    return getProp(feature.properties, ['kategori', 'category', 'Kategori'], '-');
-}
-
-function getFeatureAddress(feature) {
-    return getProp(feature.properties, ['alamat', 'Alamat', 'address'], '-');
-}
-
-function getFeatureCenter(feature) {
-    if (!feature.geometry) return { lng: soloCenter[0], lat: soloCenter[1] };
-
-    if (feature.geometry.type === 'Point') {
-        return {
-            lng: feature.geometry.coordinates[0],
-            lat: feature.geometry.coordinates[1]
-        };
+    function getProp(props, keys, fallback=''){
+      for(const key of keys){
+        if(props && props[key] !== undefined && props[key] !== null && props[key] !== '') return props[key];
+      }
+      return fallback;
     }
 
-    const bounds = new mapboxgl.LngLatBounds();
+    function getFeatureName(feature){ return getProp(feature.properties, ['nama','name','Nama'], 'Fasilitas'); }
+    function getFeatureCategory(feature){ return getProp(feature.properties, ['kategori','category','Kategori'], '-'); }
+    function getFeatureAddress(feature){ return getProp(feature.properties, ['alamat','Alamat','address'], '-'); }
 
-    function extendCoords(coords) {
-        if (typeof coords[0] === 'number' && typeof coords[1] === 'number') {
-            bounds.extend(coords);
-            return;
-        }
+    function getFeatureCenter(feature){
+      if(!feature.geometry) return { lng: soloCenter[0], lat: soloCenter[1] };
+      if(feature.geometry.type === 'Point'){
+        return { lng: feature.geometry.coordinates[0], lat: feature.geometry.coordinates[1] };
+      }
+      const bounds = new mapboxgl.LngLatBounds();
+      function extendCoords(coords){
+        if(typeof coords[0] === 'number' && typeof coords[1] === 'number') return bounds.extend(coords);
         coords.forEach(extendCoords);
+      }
+      extendCoords(feature.geometry.coordinates);
+      const center = bounds.getCenter();
+      return { lng:center.lng, lat:center.lat };
     }
 
-    extendCoords(feature.geometry.coordinates);
-    const center = bounds.getCenter();
-    return { lng: center.lng, lat: center.lat };
-}
-
-function popupHTML(feature) {
-    const nama = getFeatureName(feature);
-    const kategori = getFeatureCategory(feature);
-    const alamat = getFeatureAddress(feature);
-    const center = getFeatureCenter(feature);
-    const categoryKey = getProp(feature.properties, ['_categoryKey'], '');
-    const emoji = categoryConfig[categoryKey]?.iconText || '📍';
-
-    return `
+    function popupHTML(feature){
+      const nama = getFeatureName(feature);
+      const kategori = getFeatureCategory(feature);
+      const alamat = getFeatureAddress(feature);
+      const center = getFeatureCenter(feature);
+      const categoryKey = getProp(feature.properties, ['_categoryKey'], '');
+      const emoji = categoryConfig[categoryKey]?.iconText || '📍';
+      return `
         <div class="popup-card">
-            <div style="font-size:18px;font-weight:700;color:#0f172a;">${emoji} ${nama}</div>
-            <div class="popup-kategori">${kategori}</div>
-            <div class="popup-alamat">${alamat}</div>
-            <button class="popup-button" onclick="setRouteTo(${center.lng}, ${center.lat})">Rute ke sini</button>
+          <div style="font-size:18px;font-weight:700;color:#0f172a;">${emoji} ${nama}</div>
+          <div class="popup-kategori">${kategori}</div>
+          <div class="popup-alamat">${alamat}</div>
+          <button class="popup-button" onclick="setRouteTo(${center.lng}, ${center.lat})">Rute ke sini</button>
         </div>
-    `;
-}
+      `;
+    }
 
-window.setRouteTo = function(lng, lat) {
-    const destination = [lng, lat];
-
-    function drawRoute(origin) {
+    window.setRouteTo = function(lng, lat){
+      const destination = [lng, lat];
+      function drawRoute(origin){
         currentRouteState.origin = origin;
         currentRouteState.destination = destination;
-
         directions.removeRoutes();
         directions.setOrigin(origin);
         directions.setDestination(destination);
-
-        setTimeout(() => {
-            const routePanel = document.querySelector('.mapboxgl-ctrl-directions');
-            if (routePanel) routePanel.style.zIndex = '6';
-        }, 200);
-    }
-
-    if (navigator.geolocation) {
+      }
+      if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(
-            (position) => {
-                drawRoute([position.coords.longitude, position.coords.latitude]);
-            },
-            () => {
-                console.warn('Lokasi pengguna tidak tersedia, memakai titik pusat Solo sebagai asal.');
-                drawRoute(soloCenter);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
+          (position) => drawRoute([position.coords.longitude, position.coords.latitude]),
+          () => drawRoute(soloCenter),
+          { enableHighAccuracy:true, timeout:10000, maximumAge:0 }
         );
-    } else {
+      } else {
         drawRoute(soloCenter);
-    }
-};
+      }
+    };
 
-function restoreDirectionsRoute() {
-    if (!currentRouteState.origin || !currentRouteState.destination) return;
-
-    try {
-        if (map.hasControl(directions)) {
-            map.removeControl(directions);
-        }
-    } catch (e) {
-        console.warn('Directions control remove skipped:', e);
-    }
-
-    map.addControl(directions, 'top-right');
-
-    setTimeout(() => {
+    function restoreDirectionsRoute(){
+      if(!currentRouteState.origin || !currentRouteState.destination) return;
+      try{ if(map.hasControl(directions)) map.removeControl(directions); } catch(e){}
+      map.addControl(directions, 'top-right');
+      setTimeout(() => {
         directions.setOrigin(currentRouteState.origin);
         directions.setDestination(currentRouteState.destination);
+      }, 250);
+    }
 
-        const routePanel = document.querySelector('.mapboxgl-ctrl-directions');
-        if (routePanel) routePanel.style.zIndex = '6';
-    }, 250);
-}
-
-function enrichGeoJSONFeatures(categoryKey, data) {
-    const cfg = categoryConfig[categoryKey];
-    const cloned = JSON.parse(JSON.stringify(data));
-
-    cloned.features = (cloned.features || []).map(feature => {
+    function enrichGeoJSONFeatures(categoryKey, data){
+      const cfg = categoryConfig[categoryKey];
+      const cloned = JSON.parse(JSON.stringify(data));
+      cloned.features = (cloned.features || []).map(feature => {
         const props = feature.properties || {};
-        const nama = getProp(props, ['nama', 'name', 'Nama'], '');
-        const kategori = getProp(props, ['kategori', 'category', 'Kategori'], categoryKey);
-        const alamat = getProp(props, ['alamat', 'Alamat', 'address'], '');
-        const searchBlob = normalizeText([
-            nama,
-            kategori,
-            alamat,
-            cfg.searchTerms.join(' '),
-            categoryKey
-        ].join(' '));
-
-        feature.properties = {
-            ...props,
-            _categoryKey: categoryKey,
-            _searchBlob: searchBlob
-        };
-
+        const nama = getProp(props, ['nama','name','Nama'], '');
+        const kategori = getProp(props, ['kategori','category','Kategori'], categoryKey);
+        const alamat = getProp(props, ['alamat','Alamat','address'], '');
+        const searchBlob = normalizeText([nama, kategori, alamat, cfg.searchTerms.join(' '), categoryKey].join(' '));
+        feature.properties = { ...props, _categoryKey: categoryKey, _searchBlob: searchBlob };
         return feature;
-    });
+      });
+      return cloned;
+    }
 
-    return cloned;
-}
-
-function allFeatures() {
-    return [
+    function allFeatures(){
+      return [
         ...(geojsonStore.apotek?.features || []),
         ...(geojsonStore.dokter?.features || []),
         ...(geojsonStore.klinik?.features || []),
         ...(geojsonStore.rs?.features || [])
-    ];
-}
-
-async function loadGeoJSON(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Gagal memuat ${url}`);
-    return await res.json();
-}
-
-function getLayerIdsByCategory(categoryKey) {
-    return {
-        polygonFill: `${categoryKey}-polygon-fill`,
-        polygonOutline: `${categoryKey}-polygon-outline`,
-        point: `${categoryKey}-point`
-    };
-}
-
-function sourceHasPolygonFeatures(data) {
-    return (data?.features || []).some(f =>
-        f.geometry &&
-        (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon')
-    );
-}
-
-function sourceHasPointFeatures(data) {
-    return (data?.features || []).some(f =>
-        f.geometry &&
-        (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint')
-    );
-}
-
-function addFacilityLayers(categoryKey, sourceId, color) {
-    const ids = getLayerIdsByCategory(categoryKey);
-    const data = geojsonStore[categoryKey];
-
-    if (sourceHasPolygonFeatures(data)) {
-        if (!map.getLayer(ids.polygonFill)) {
-            map.addLayer({
-                id: ids.polygonFill,
-                type: 'fill',
-                source: sourceId,
-                filter: [
-                    'any',
-                    ['==', ['geometry-type'], 'Polygon'],
-                    ['==', ['geometry-type'], 'MultiPolygon']
-                ],
-                paint: {
-                    'fill-color': color,
-                    'fill-opacity': 0.35
-                }
-            });
-        }
-
-        if (!map.getLayer(ids.polygonOutline)) {
-            map.addLayer({
-                id: ids.polygonOutline,
-                type: 'line',
-                source: sourceId,
-                filter: [
-                    'any',
-                    ['==', ['geometry-type'], 'Polygon'],
-                    ['==', ['geometry-type'], 'MultiPolygon']
-                ],
-                paint: {
-                    'line-color': color,
-                    'line-width': 2
-                }
-            });
-        }
+      ];
     }
 
-    if (sourceHasPointFeatures(data)) {
-        if (!map.getLayer(ids.point)) {
-            map.addLayer({
-                id: ids.point,
-                type: 'circle',
-                source: sourceId,
-                filter: [
-                    'any',
-                    ['==', ['geometry-type'], 'Point'],
-                    ['==', ['geometry-type'], 'MultiPoint']
-                ],
-                paint: {
-                    'circle-color': color,
-                    'circle-radius': categoryKey === 'rs' ? 5 : 4,
-                    'circle-stroke-width': 1.2,
-                    'circle-stroke-color': '#ffffff'
-                }
-            });
-        }
+    async function loadGeoJSON(url){
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(`Gagal memuat ${url}`);
+      return await res.json();
     }
-}
 
-function ensureSourcesAndLayers() {
-    Object.entries(categoryConfig).forEach(([key, cfg]) => {
-        if (!map.getSource(cfg.sourceId)) {
-            map.addSource(cfg.sourceId, {
-                type: 'geojson',
-                data: geojsonStore[key]
-            });
+    function getLayerIdsByCategory(categoryKey){
+      return {
+        polygonFill:`${categoryKey}-polygon-fill`,
+        polygonOutline:`${categoryKey}-polygon-outline`,
+        point:`${categoryKey}-point`
+      };
+    }
+
+    function sourceHasPolygonFeatures(data){
+      return (data?.features || []).some(f => f.geometry && (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon'));
+    }
+
+    function sourceHasPointFeatures(data){
+      return (data?.features || []).some(f => f.geometry && (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint'));
+    }
+
+    function addFacilityLayers(categoryKey, sourceId, color){
+      const ids = getLayerIdsByCategory(categoryKey);
+      const data = geojsonStore[categoryKey];
+      if(sourceHasPolygonFeatures(data)){
+        if(!map.getLayer(ids.polygonFill)){
+          map.addLayer({
+            id: ids.polygonFill,
+            type:'fill',
+            source:sourceId,
+            filter:['any',['==',['geometry-type'],'Polygon'],['==',['geometry-type'],'MultiPolygon']],
+            paint:{ 'fill-color':color, 'fill-opacity':0.35 }
+          });
+        }
+        if(!map.getLayer(ids.polygonOutline)){
+          map.addLayer({
+            id: ids.polygonOutline,
+            type:'line',
+            source:sourceId,
+            filter:['any',['==',['geometry-type'],'Polygon'],['==',['geometry-type'],'MultiPolygon']],
+            paint:{ 'line-color':color, 'line-width':2 }
+          });
+        }
+      }
+      if(sourceHasPointFeatures(data)){
+        if(!map.getLayer(ids.point)){
+          map.addLayer({
+            id: ids.point,
+            type:'circle',
+            source:sourceId,
+            filter:['any',['==',['geometry-type'],'Point'],['==',['geometry-type'],'MultiPoint']],
+            paint:{ 'circle-color':color, 'circle-radius': categoryKey === 'rs' ? 5 : 4, 'circle-stroke-width':1.2, 'circle-stroke-color':'#ffffff' }
+          });
+        }
+      }
+    }
+
+    function ensureSourcesAndLayers(){
+      Object.entries(categoryConfig).forEach(([key, cfg]) => {
+        if(!map.getSource(cfg.sourceId)){
+          map.addSource(cfg.sourceId, { type:'geojson', data: geojsonStore[key] });
         }
         addFacilityLayers(key, cfg.sourceId, cfg.color);
-    });
-}
+      });
+    }
 
-function createEmojiElement(categoryKey) {
-    const cfg = categoryConfig[categoryKey];
-    const el = document.createElement('div');
+    function createEmojiElement(categoryKey){
+      const cfg = categoryConfig[categoryKey];
+      const el = document.createElement('div');
+      el.style.width = '26px';
+      el.style.height = '26px';
+      el.style.borderRadius = '50%';
+      el.style.display = 'flex';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
+      el.style.background = cfg.color;
+      el.style.border = '2px solid #ffffff';
+      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.25)';
+      el.style.fontSize = '14px';
+      el.style.cursor = 'pointer';
+      el.textContent = cfg.iconText;
+      return el;
+    }
 
-    el.style.width = '26px';
-    el.style.height = '26px';
-    el.style.borderRadius = '50%';
-    el.style.display = 'flex';
-    el.style.alignItems = 'center';
-    el.style.justifyContent = 'center';
-    el.style.background = cfg.color;
-    el.style.border = '2px solid #ffffff';
-    el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.25)';
-    el.style.fontSize = '14px';
-    el.style.lineHeight = '1';
-    el.style.cursor = 'pointer';
-    el.style.userSelect = 'none';
-    el.style.transition = 'box-shadow 0.2s ease, opacity 0.2s ease, filter 0.2s ease';
-    el.style.backfaceVisibility = 'hidden';
-    el.style.webkitBackfaceVisibility = 'hidden';
-    el.style.transform = 'translateZ(0)';
-    el.style.willChange = 'auto';
-
-    el.textContent = cfg.iconText;
-
-    el.addEventListener('mouseenter', () => {
-        el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.32)';
-        el.style.opacity = '0.96';
-        el.style.filter = 'brightness(1.03)';
-    });
-
-    el.addEventListener('mouseleave', () => {
-        el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.25)';
-        el.style.opacity = '1';
-        el.style.filter = 'none';
-    });
-
-    return el;
-}
-
-function clearHtmlMarkers() {
-    Object.keys(htmlMarkers).forEach(categoryKey => {
+    function clearHtmlMarkers(){
+      Object.keys(htmlMarkers).forEach(categoryKey => {
         htmlMarkers[categoryKey].forEach(item => item.marker.remove());
         htmlMarkers[categoryKey] = [];
-    });
-}
+      });
+    }
 
-function buildHtmlMarkers() {
-    clearHtmlMarkers();
-
-    Object.keys(categoryConfig).forEach(categoryKey => {
+    function buildHtmlMarkers(){
+      clearHtmlMarkers();
+      Object.keys(categoryConfig).forEach(categoryKey => {
         const features = geojsonStore[categoryKey]?.features || [];
-
         features.forEach(feature => {
-            const center = getFeatureCenter(feature);
-            const el = createEmojiElement(categoryKey);
-
-            const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-                .setLngLat([center.lng, center.lat])
-                .addTo(map);
-
-            el.addEventListener('click', (evt) => {
-                evt.stopPropagation();
-
-                if (popup) popup.remove();
-
-                popup = new mapboxgl.Popup({ offset: 12 })
-                    .setLngLat([center.lng, center.lat])
-                    .setHTML(popupHTML(feature))
-                    .addTo(map);
-            });
-
-            htmlMarkers[categoryKey].push({
-                marker,
-                feature,
-                element: el
-            });
+          const center = getFeatureCenter(feature);
+          const el = createEmojiElement(categoryKey);
+          const marker = new mapboxgl.Marker({ element: el, anchor:'center' }).setLngLat([center.lng, center.lat]).addTo(map);
+          el.addEventListener('click', (evt) => {
+            evt.stopPropagation();
+            if(popup) popup.remove();
+            popup = new mapboxgl.Popup({ offset:12 }).setLngLat([center.lng, center.lat]).setHTML(popupHTML(feature)).addTo(map);
+          });
+          htmlMarkers[categoryKey].push({ marker, feature, element: el });
         });
-    });
-}
+      });
+    }
 
-function applyMarkerVisibilityByState(keyword = '') {
-    const kw = normalizeText(keyword);
-
-    Object.entries(categoryConfig).forEach(([categoryKey, cfg]) => {
+    function applyMarkerVisibilityByState(keyword=''){
+      const kw = normalizeText(keyword);
+      Object.entries(categoryConfig).forEach(([categoryKey, cfg]) => {
         const checked = document.getElementById(cfg.checkboxId).checked;
-
         htmlMarkers[categoryKey].forEach(item => {
-            const match = !kw || normalizeText(item.feature.properties?._searchBlob || '').includes(kw);
-            item.element.style.display = checked && match ? 'flex' : 'none';
+          const match = !kw || normalizeText(item.feature.properties?._searchBlob || '').includes(kw);
+          item.element.style.display = checked && match ? 'flex' : 'none';
         });
-    });
-}
+      });
+    }
 
-function applyCheckboxVisibility() {
-    Object.entries(categoryConfig).forEach(([categoryKey, cfg]) => {
+    function applyCheckboxVisibility(){
+      Object.entries(categoryConfig).forEach(([categoryKey, cfg]) => {
         const checked = document.getElementById(cfg.checkboxId).checked;
         const ids = getLayerIdsByCategory(categoryKey);
-
         [ids.polygonFill, ids.polygonOutline, ids.point].forEach(layerId => {
-            if (map.getLayer(layerId)) {
-                map.setLayoutProperty(layerId, 'visibility', checked ? 'visible' : 'none');
-            }
+          if(map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', checked ? 'visible' : 'none');
         });
-    });
+      });
+      applyMarkerVisibilityByState(document.getElementById('searchBox').value);
+    }
 
-    applyMarkerVisibilityByState(document.getElementById('searchBox').value);
-}
-
-function getAllSearchableLayerIds() {
-    const allIds = [];
-
-    Object.keys(categoryConfig).forEach(categoryKey => {
+    function getAllSearchableLayerIds(){
+      const allIds = [];
+      Object.keys(categoryConfig).forEach(categoryKey => {
         const ids = getLayerIdsByCategory(categoryKey);
         [ids.polygonFill, ids.polygonOutline, ids.point].forEach(layerId => {
-            if (map.getLayer(layerId)) allIds.push(layerId);
+          if(map.getLayer(layerId)) allIds.push(layerId);
         });
-    });
+      });
+      return allIds;
+    }
 
-    return allIds;
-}
+    function matchesKeyword(feature, keyword){
+      const kw = normalizeText(keyword);
+      if(!kw) return true;
+      const searchBlob = normalizeText(getProp(feature.properties, ['_searchBlob'], ''));
+      return searchBlob.includes(kw);
+    }
 
-function matchesKeyword(feature, keyword) {
-    const kw = normalizeText(keyword);
-    if (!kw) return true;
-
-    const searchBlob = normalizeText(getProp(feature.properties, ['_searchBlob'], ''));
-    return searchBlob.includes(kw);
-}
-
-function getMatchedFeatures(keyword) {
-    const kw = normalizeText(keyword);
-
-    return allFeatures().filter(feature => {
+    function getMatchedFeatures(keyword){
+      const kw = normalizeText(keyword);
+      return allFeatures().filter(feature => {
         const categoryKey = getProp(feature.properties, ['_categoryKey'], '');
         const visibleByCheckbox = categoryKey ? document.getElementById(categoryConfig[categoryKey].checkboxId).checked : true;
         return visibleByCheckbox && matchesKeyword(feature, kw);
-    });
-}
+      });
+    }
 
-function updateStats(keyword = '') {
-    const matched = normalizeText(keyword) ? getMatchedFeatures(keyword) : allFeatures().filter(feature => {
-        const categoryKey = getProp(feature.properties, ['_categoryKey'], '');
-        return categoryKey ? document.getElementById(categoryConfig[categoryKey].checkboxId).checked : true;
-    });
+    function updateStats(keyword=''){
+      const matched = normalizeText(keyword)
+        ? getMatchedFeatures(keyword)
+        : allFeatures().filter(feature => {
+            const categoryKey = getProp(feature.properties, ['_categoryKey'], '');
+            return categoryKey ? document.getElementById(categoryConfig[categoryKey].checkboxId).checked : true;
+          });
 
-    const counts = { apotek: 0, dokter: 0, klinik: 0, rs: 0 };
-    matched.forEach(feature => {
+      const counts = { apotek:0, dokter:0, klinik:0, rs:0 };
+      matched.forEach(feature => {
         const key = getProp(feature.properties, ['_categoryKey'], '');
-        if (counts[key] !== undefined) counts[key] += 1;
-    });
+        if(counts[key] !== undefined) counts[key] += 1;
+      });
 
-    document.getElementById('statTotal').textContent = matched.length;
-    document.getElementById('statApotek').textContent = counts.apotek;
-    document.getElementById('statDokter').textContent = counts.dokter;
-    document.getElementById('statKlinik').textContent = counts.klinik;
-    document.getElementById('statRs').textContent = counts.rs;
+      document.getElementById('statTotal').textContent = matched.length;
+      document.getElementById('statApotek').textContent = counts.apotek;
+      document.getElementById('statDokter').textContent = counts.dokter;
+      document.getElementById('statKlinik').textContent = counts.klinik;
+      document.getElementById('statRs').textContent = counts.rs;
 
-    const badge = document.getElementById('resultBadge');
-    if (normalizeText(keyword)) {
+      document.getElementById('heroTotal').textContent = matched.length || 43;
+      document.getElementById('heroRs').textContent = counts.rs || 23;
+      document.getElementById('heroKlinik').textContent = counts.klinik || 13;
+      document.getElementById('heroLain').textContent = (counts.apotek + counts.dokter) || 7;
+
+      const badge = document.getElementById('resultBadge');
+      if(normalizeText(keyword)){
         badge.style.display = 'block';
         badge.textContent = `Menampilkan ${matched.length} hasil untuk "${keyword}"`;
-    } else {
+      } else {
         badge.style.display = 'none';
+      }
     }
-}
 
-function applySearch(keyword) {
-    const kw = normalizeText(keyword);
-    if (!map.isStyleLoaded()) return;
-
-    const searchableLayers = getAllSearchableLayerIds();
-
-    if (!kw) {
-        searchableLayers.forEach(layerId => {
-            if (map.getLayer(layerId)) {
-                map.setFilter(layerId, null);
-            }
-        });
+    function applySearch(keyword){
+      const kw = normalizeText(keyword);
+      if(!map.isStyleLoaded()) return;
+      const searchableLayers = getAllSearchableLayerIds();
+      if(!kw){
+        searchableLayers.forEach(layerId => { if(map.getLayer(layerId)) map.setFilter(layerId, null); });
         applyCheckboxVisibility();
         updateStats('');
         return;
+      }
+      const filterExpr = ['in', kw, ['downcase', ['coalesce', ['get', '_searchBlob'], '']]];
+      searchableLayers.forEach(layerId => { if(map.getLayer(layerId)) map.setFilter(layerId, filterExpr); });
+      applyCheckboxVisibility();
+      applyMarkerVisibilityByState(keyword);
+      updateStats(keyword);
     }
 
-    const filterExpr = [
-        'in',
-        kw,
-        ['downcase', ['coalesce', ['get', '_searchBlob'], '']]
-    ];
-
-    searchableLayers.forEach(layerId => {
-        if (map.getLayer(layerId)) {
-            map.setFilter(layerId, filterExpr);
+    function zoomToMatchedFeatures(keyword){
+      const matched = getMatchedFeatures(keyword);
+      if(!matched.length) return;
+      const bounds = new mapboxgl.LngLatBounds();
+      matched.forEach(feature => {
+        if(feature.geometry.type === 'Point') bounds.extend(feature.geometry.coordinates);
+        else {
+          const center = getFeatureCenter(feature);
+          bounds.extend([center.lng, center.lat]);
         }
-    });
+      });
+      if(!bounds.isEmpty()){
+        map.fitBounds(bounds, { padding:{ top:100, bottom:80, left:80, right:380 }, duration:1000, maxZoom:16 });
+      }
+    }
 
-    applyCheckboxVisibility();
-    applyMarkerVisibilityByState(keyword);
-    updateStats(keyword);
-}
-
-function zoomToMatchedFeatures(keyword) {
-    const kw = normalizeText(keyword);
-    if (kw.length < 1) return;
-
-    const matched = getMatchedFeatures(kw);
-    if (!matched.length) return;
-
-    const bounds = new mapboxgl.LngLatBounds();
-
-    matched.forEach(feature => {
-        if (feature.geometry.type === 'Point') {
-            bounds.extend(feature.geometry.coordinates);
-        } else {
-            const center = getFeatureCenter(feature);
-            bounds.extend([center.lng, center.lat]);
+    function fitAllDataBounds(){
+      const features = allFeatures();
+      if(!features.length) return;
+      const bounds = new mapboxgl.LngLatBounds();
+      features.forEach(feature => {
+        if(!feature.geometry) return;
+        if(feature.geometry.type === 'Point') bounds.extend(feature.geometry.coordinates);
+        else {
+          const center = getFeatureCenter(feature);
+          bounds.extend([center.lng, center.lat]);
         }
-    });
-
-    if (!bounds.isEmpty()) {
-        map.fitBounds(bounds, {
-            padding: { top: 100, bottom: 60, left: 80, right: 360 },
-            duration: 1000,
-            maxZoom: 16
-        });
+      });
+      if(!bounds.isEmpty()){
+        map.fitBounds(bounds, { padding:{ top:100, bottom:80, left:80, right:380 }, duration:1200, maxZoom:14 });
+      }
     }
-}
 
-function fitAllDataBounds() {
-    const features = allFeatures();
-    if (!features.length) return;
-
-    const bounds = new mapboxgl.LngLatBounds();
-
-    features.forEach(feature => {
-        if (!feature.geometry) return;
-
-        if (feature.geometry.type === 'Point') {
-            bounds.extend(feature.geometry.coordinates);
-        } else {
-            const center = getFeatureCenter(feature);
-            bounds.extend([center.lng, center.lat]);
-        }
-    });
-
-    if (!bounds.isEmpty()) {
-        map.fitBounds(bounds, {
-            padding: { top: 100, bottom: 60, left: 60, right: 360 },
-            duration: 1200,
-            maxZoom: 14
-        });
+    function restoreMapState(afterStyleChange=false){
+      ensureSourcesAndLayers();
+      applyCheckboxVisibility();
+      applySearch(document.getElementById('searchBox').value);
+      updateStats(document.getElementById('searchBox').value);
+      if(!afterStyleChange){ map.jumpTo({ center:soloCenter, zoom:11.8 }); }
     }
-}
 
-function restoreMapState(afterStyleChange = false) {
-    ensureSourcesAndLayers();
-    applyCheckboxVisibility();
-    applySearch(document.getElementById('searchBox').value);
-    updateStats(document.getElementById('searchBox').value);
-
-    if (!afterStyleChange) {
-        map.jumpTo({
-            center: [110.82409, -7.57251],
-            zoom: 11.8
-        });
-    }
-}
-
-document.getElementById('fly').addEventListener('click', () => {
-    map.flyTo({
-        center: soloCenter,
-        zoom: 13,
-        duration: 2000
+    document.getElementById('fly').addEventListener('click', () => {
+      map.flyTo({ center:soloCenter, zoom:13, duration:1800 });
     });
-});
 
-document.getElementById('backHome').addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    document.getElementById('backHome').addEventListener('click', () => {
+      window.scrollTo({ top:0, behavior:'smooth' });
     });
-});
 
-['apotek', 'dokter', 'klinik', 'rs'].forEach(id => {
-    document.getElementById(id).addEventListener('change', () => {
+    ['apotek','dokter','klinik','rs'].forEach(id => {
+      document.getElementById(id).addEventListener('change', () => {
         const keyword = document.getElementById('searchBox').value;
         applyCheckboxVisibility();
         applySearch(keyword);
         updateStats(keyword);
-        if (normalizeText(keyword)) {
-            zoomToMatchedFeatures(keyword);
-        }
+        if(normalizeText(keyword)) zoomToMatchedFeatures(keyword);
+      });
     });
-});
 
-document.getElementById('searchBox').addEventListener('input', function(e){
-    const keyword = e.target.value;
-    applySearch(keyword);
+    document.getElementById('searchBox').addEventListener('input', function(e){
+      const keyword = e.target.value;
+      applySearch(keyword);
+      if(normalizeText(keyword)) zoomToMatchedFeatures(keyword);
+      else fitAllDataBounds();
+    });
 
-    if (normalizeText(keyword)) {
-        zoomToMatchedFeatures(keyword);
-    } else {
-        fitAllDataBounds();
-    }
-});
-
-document.getElementById('basemapSelect').addEventListener('change', function() {
-    map.setStyle(this.value);
-
-    map.once('style.load', () => {
+    document.getElementById('basemapSelect').addEventListener('change', function(){
+      map.setStyle(this.value);
+      map.once('style.load', () => {
         restoreMapState(true);
         buildHtmlMarkers();
         applyMarkerVisibilityByState(document.getElementById('searchBox').value);
         restoreDirectionsRoute();
+      });
     });
-});
 
-map.on('load', async () => {
-    try {
+    map.on('load', async () => {
+      try{
         const [apotekRaw, dokterRaw, klinikRaw, rsRaw] = await Promise.all([
-            loadGeoJSON(categoryConfig.apotek.file),
-            loadGeoJSON(categoryConfig.dokter.file),
-            loadGeoJSON(categoryConfig.klinik.file),
-            loadGeoJSON(categoryConfig.rs.file)
+          loadGeoJSON(categoryConfig.apotek.file),
+          loadGeoJSON(categoryConfig.dokter.file),
+          loadGeoJSON(categoryConfig.klinik.file),
+          loadGeoJSON(categoryConfig.rs.file)
         ]);
 
         geojsonStore.apotek = enrichGeoJSONFeatures('apotek', apotekRaw);
@@ -1319,26 +1064,13 @@ map.on('load', async () => {
         buildHtmlMarkers();
         applyMarkerVisibilityByState('');
         updateStats('');
-
-        const directionsContainer = document.querySelector('.mapboxgl-ctrl-directions');
-        if (directionsContainer) {
-            directionsContainer.style.zIndex = '6';
-        }
-
-    } catch (error) {
+      } catch(error){
         console.error(error);
         alert('Data GeoJSON gagal dimuat. Cek nama file, path assets/geojson/, dan tipe geometrinya.');
-    }
-});
+      }
+    });
 
-map.on('error', (e) => {
-    console.error('Mapbox error:', e);
-});
-</script>
-
-<div class="custom-copyright">
-  © 2026 WebGIS Fasilitas Kesehatan Surakarta - Eka Pungky Aprillia - 117230034
-</div>
-
+    map.on('error', (e) => console.error('Mapbox error:', e));
+  </script>
 </body>
 </html>

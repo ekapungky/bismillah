@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</title>
+  <title>Peta Interaktif Fasilitas Kesehatan</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
@@ -19,17 +19,18 @@
 
   <style>
     :root{
-      --primary:#11213b;
-      --primary-2:#1a3156;
-      --secondary:#ef4444;
-      --accent:#0ea5a4;
-      --bg:#eef4f8;
+      --primary:#101c33;
+      --secondary:#ff4d5f;
+      --cyan:#58e8ff;
+      --violet:#8b7bff;
+      --bg:#edf3f8;
       --card:#ffffff;
       --text:#0f172a;
       --muted:#64748b;
-      --line:#dbe5ef;
-      --shadow:0 18px 40px rgba(15,23,42,.10);
+      --line:#dce6ef;
+      --shadow:0 18px 42px rgba(15,23,42,.10);
       --radius:22px;
+      --holo:linear-gradient(135deg, rgba(88,232,255,.20), rgba(139,123,255,.22), rgba(255,255,255,.15));
     }
 
     *{box-sizing:border-box}
@@ -43,40 +44,37 @@
 
     .navbar{
       position:fixed;
-      top:0;
-      left:0;
-      right:0;
+      inset:0 0 auto 0;
+      height:72px;
       z-index:1000;
-      height:70px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       padding:0 24px;
-      background:rgba(10,20,36,.92);
+      background:rgba(9,20,39,.92);
       backdrop-filter:blur(10px);
       box-shadow:0 10px 30px rgba(0,0,0,.12);
     }
 
     .brand{
       color:#fff;
-      font-weight:700;
       font-size:17px;
-      letter-spacing:.1px;
+      font-weight:700;
     }
 
     .nav-actions{
       display:flex;
-      align-items:center;
       gap:10px;
+      align-items:center;
     }
 
     .btn{
       border:none;
+      text-decoration:none;
       border-radius:14px;
       padding:11px 16px;
       font:600 14px 'Poppins',sans-serif;
       cursor:pointer;
-      text-decoration:none;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -85,135 +83,25 @@
 
     .btn:hover{transform:translateY(-1px)}
     .btn-dark{background:rgba(255,255,255,.10);color:#fff}
-    .btn-red{background:var(--secondary);color:#fff}
+    .btn-red{background:linear-gradient(135deg,#ff5a6b,#ff334b);color:#fff;box-shadow:0 10px 24px rgba(255,77,95,.24)}
     .btn-primary{background:var(--primary);color:#fff}
-    .btn-light{background:#fff;color:var(--primary)}
-
-    .hero{
-      min-height:72vh;
-      padding:108px 24px 42px;
-      background:
-        linear-gradient(rgba(9,18,33,.60), rgba(9,18,33,.76)),
-        url('assets/image/Surakarta.jpg');
-      background-size:cover;
-      background-position:center;
-      color:#fff;
-      display:flex;
-      align-items:center;
-    }
-
-    .hero-wrap{
-      width:100%;
-      max-width:1360px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:28px;
-      align-items:center;
-    }
-
-    .hero-copy{
-      max-width:760px;
-    }
-
-    .hero-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.12);
-      font-size:13px;
-      font-weight:600;
-      margin-bottom:16px;
-    }
-
-    .hero h1{
-      margin:0 0 14px;
-      font-size:60px;
-      line-height:1.04;
-      font-weight:800;
-      letter-spacing:-1px;
-    }
-
-    .hero p{
-      margin:0 0 24px;
-      max-width:700px;
-      font-size:18px;
-      line-height:1.8;
-      color:rgba(255,255,255,.92);
-    }
-
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .hero-panel{
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:28px;
-      padding:22px;
-      backdrop-filter:blur(12px);
-      box-shadow:0 18px 40px rgba(0,0,0,.16);
-    }
-
-    .hero-panel h3{
-      margin:0 0 8px;
-      font-size:24px;
-      color:#fff;
-    }
-
-    .hero-panel p{
-      margin:0 0 16px;
-      font-size:14px;
-      line-height:1.8;
-      color:rgba(255,255,255,.82);
-    }
-
-    .hero-stats{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-
-    .hero-stat{
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      padding:16px;
-    }
-
-    .hero-stat small{
-      display:block;
-      font-size:12px;
-      color:rgba(255,255,255,.72);
-      margin-bottom:6px;
-    }
-
-    .hero-stat strong{
-      color:#fff;
-      font-size:28px;
-      line-height:1;
-    }
 
     .section-head{
       max-width:1360px;
       margin:0 auto;
-      padding:26px 24px 18px;
+      padding:108px 24px 18px;
     }
 
-    .section-head h2{
-      margin:0 0 8px;
-      font-size:42px;
-      line-height:1.1;
+    .section-head h1{
+      margin:0 0 10px;
+      font-size:44px;
+      line-height:1.08;
       letter-spacing:-.5px;
     }
 
     .section-head p{
       margin:0;
-      max-width:980px;
+      max-width:960px;
       color:var(--muted);
       line-height:1.8;
       font-size:15px;
@@ -222,7 +110,7 @@
     .workspace{
       max-width:1360px;
       margin:0 auto;
-      padding:0 24px 42px;
+      padding:0 24px 36px;
       display:grid;
       grid-template-columns:320px minmax(0,1fr);
       gap:20px;
@@ -231,17 +119,17 @@
 
     .sidebar{
       position:sticky;
-      top:86px;
+      top:88px;
       display:flex;
       flex-direction:column;
       gap:16px;
     }
 
     .panel{
-      background:var(--card);
+      background:#fff;
       border-radius:var(--radius);
-      box-shadow:var(--shadow);
       border:1px solid rgba(226,232,240,.95);
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
 
@@ -258,8 +146,8 @@
     .panel-desc{
       margin:0;
       font-size:13px;
-      line-height:1.75;
       color:var(--muted);
+      line-height:1.75;
     }
 
     .mode-tabs{
@@ -275,7 +163,7 @@
     .mode-btn{
       border:none;
       border-radius:12px;
-      padding:10px 10px;
+      padding:10px 8px;
       font:600 13px 'Poppins',sans-serif;
       background:transparent;
       color:#334155;
@@ -315,18 +203,14 @@
       cursor:pointer;
     }
 
-    .acc-head .plus{
+    .plus{
       font-size:20px;
       color:#64748b;
       transition:.2s ease;
     }
 
     .acc-item.open .plus{transform:rotate(45deg)}
-    .acc-body{
-      display:none;
-      padding:0 18px 18px;
-    }
-
+    .acc-body{display:none;padding:0 18px 18px}
     .acc-item.open .acc-body{display:block}
 
     .filter-list{
@@ -346,8 +230,7 @@
       font-size:14px;
     }
 
-    .search-box,
-    select{
+    .search-box, select{
       width:100%;
       margin-top:12px;
       padding:13px 14px;
@@ -357,8 +240,7 @@
       font:14px 'Poppins',sans-serif;
     }
 
-    .search-box:focus,
-    select:focus{
+    .search-box:focus, select:focus{
       outline:none;
       border-color:#93c5fd;
       box-shadow:0 0 0 4px rgba(59,130,246,.12);
@@ -410,17 +292,6 @@
       font-size:13px;
     }
 
-    .toolbar-right{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .mobile-filter-btn{
-      display:none;
-    }
-
     .stats-grid{
       display:grid;
       grid-template-columns:repeat(5,minmax(120px,1fr));
@@ -470,8 +341,8 @@
 
     .floating-actions{
       position:absolute;
-      top:24px;
-      right:24px;
+      top:18px;
+      right:18px;
       z-index:20;
       display:flex;
       gap:10px;
@@ -480,21 +351,25 @@
 
     .floating-actions button{
       border:none;
-      border-radius:14px;
-      padding:11px 14px;
+      border-radius:16px;
+      padding:12px 16px;
       font:600 14px 'Poppins',sans-serif;
       cursor:pointer;
       color:#fff;
-      box-shadow:0 8px 18px rgba(15,23,42,.14);
+      box-shadow:0 10px 24px rgba(15,23,42,.16);
+      backdrop-filter:blur(14px);
     }
 
-    #backHome{background:var(--primary)}
-    #fly{background:var(--secondary)}
+    #fly{
+      background:linear-gradient(135deg, rgba(88,232,255,.45), rgba(139,123,255,.45), rgba(255,77,95,.35));
+      border:1px solid rgba(255,255,255,.25);
+      color:#fff;
+    }
 
     .result-badge{
       position:absolute;
-      top:24px;
-      left:24px;
+      top:18px;
+      left:18px;
       z-index:20;
       display:none;
       background:rgba(15,23,42,.88);
@@ -512,6 +387,10 @@
       font-size:12px;
     }
 
+    .mobile-filter-btn{
+      display:none;
+    }
+
     .drawer-backdrop{
       position:fixed;
       inset:0;
@@ -527,24 +406,54 @@
       pointer-events:auto;
     }
 
-    .mapboxgl-ctrl-top-left{top:14px !important;left:14px !important}
-    .mapboxgl-ctrl-top-right{top:92px !important;right:18px !important}
-    .mapboxgl-ctrl-directions{
-      width:320px !important;
-      max-width:320px !important;
-      background:rgba(255,255,255,.96) !important;
-      border-radius:18px !important;
-      box-shadow:0 14px 28px rgba(0,0,0,.14) !important;
-      font-family:'Poppins',sans-serif;
-      overflow:hidden;
-    }
-    .mapboxgl-ctrl-directions input{
-      background:#f8fafc !important;
-      border:none !important;
-      font-size:13px;
+    .mapboxgl-ctrl-top-left{
+      top:14px !important;
+      left:14px !important;
     }
 
-    .popup-card{font-family:'Poppins',sans-serif;min-width:220px}
+    .mapboxgl-ctrl-top-right{
+      top:64px !important;
+      right:16px !important;
+    }
+
+    .mapboxgl-ctrl-directions{
+      width:330px !important;
+      max-width:330px !important;
+      background:linear-gradient(135deg, rgba(88,232,255,.20), rgba(139,123,255,.22), rgba(255,255,255,.18)) !important;
+      border:1px solid rgba(255,255,255,.22) !important;
+      border-radius:22px !important;
+      box-shadow:0 18px 36px rgba(15,23,42,.18) !important;
+      font-family:'Poppins',sans-serif !important;
+      overflow:hidden !important;
+      backdrop-filter:blur(16px) !important;
+    }
+
+    .mapboxgl-ctrl-directions .directions-control-inputs{
+      background:transparent !important;
+    }
+
+    .mapboxgl-ctrl-directions input{
+      background:rgba(255,255,255,.55) !important;
+      border:none !important;
+      font-size:13px !important;
+      color:#12233f !important;
+      backdrop-filter:blur(12px) !important;
+    }
+
+    .mapboxgl-ctrl-directions .mapbox-directions-profile{
+      background:rgba(255,255,255,.28) !important;
+      backdrop-filter:blur(10px) !important;
+    }
+
+    .mapboxgl-ctrl-directions .directions-icon{
+      filter:hue-rotate(190deg) saturate(1.2);
+    }
+
+    .popup-card{
+      font-family:'Poppins',sans-serif;
+      min-width:220px;
+    }
+
     .popup-kategori{
       display:inline-block;
       margin:8px 0;
@@ -554,11 +463,13 @@
       color:#334155;
       font-size:11px;
     }
+
     .popup-alamat{
       color:#475569;
       font-size:13px;
       line-height:1.6;
     }
+
     .popup-button{
       margin-top:12px;
       width:100%;
@@ -572,58 +483,30 @@
     }
 
     @media (max-width:1200px){
-      .hero-wrap{
-        grid-template-columns:1fr;
-      }
-
-      .hero h1{
-        font-size:48px;
-      }
-
       .workspace{
         grid-template-columns:290px minmax(0,1fr);
       }
-
       .stats-grid{
         grid-template-columns:repeat(3,1fr);
       }
-
       .mode-tabs{
         grid-template-columns:1fr;
       }
     }
 
     @media (max-width:900px){
-      .navbar{
-        padding:0 14px;
-      }
-
-      .brand{
-        font-size:14px;
-      }
-
-      .hero{
-        min-height:auto;
-        padding:100px 18px 34px;
-      }
-
-      .hero h1{
-        font-size:38px;
-      }
-
+      .navbar{padding:0 14px}
+      .brand{font-size:14px}
       .section-head{
-        padding:22px 16px 16px;
+        padding:98px 16px 16px;
       }
-
-      .section-head h2{
-        font-size:30px;
+      .section-head h1{
+        font-size:34px;
       }
-
       .workspace{
         grid-template-columns:1fr;
         padding:0 16px 32px;
       }
-
       .sidebar{
         position:fixed;
         top:0;
@@ -638,85 +521,57 @@
         transition:.25s ease;
         box-shadow:20px 0 40px rgba(15,23,42,.18);
       }
-
       .sidebar.show{
         transform:translateX(0);
       }
-
       .mobile-filter-btn{
         display:inline-flex;
       }
-
       .stats-grid{
         grid-template-columns:repeat(2,1fr);
       }
-
       .map-shell{
         min-height:620px;
       }
-
       #map{
         height:590px;
         min-height:590px;
       }
-
-      .floating-actions{
-        top:auto;
-        bottom:24px;
-        right:24px;
-      }
-
       .mapboxgl-ctrl-top-right{
-        top:14px !important;
-        right:14px !important;
+        top:56px !important;
+        right:12px !important;
       }
-
       .mapboxgl-ctrl-directions{
         width:280px !important;
         max-width:280px !important;
       }
+      .floating-actions{
+        top:auto;
+        bottom:22px;
+        right:22px;
+      }
     }
 
     @media (max-width:640px){
-      .nav-actions .btn-dark{
-        display:none;
-      }
-
-      .hero h1{
-        font-size:32px;
-      }
-
-      .hero-stats{
-        grid-template-columns:1fr;
-      }
-
-      .toolbar{
-        align-items:flex-start;
-      }
-
-      .stats-grid{
-        grid-template-columns:1fr;
-      }
-
+      .nav-actions .btn-dark{display:none}
+      .section-head h1{font-size:30px}
+      .toolbar{align-items:flex-start}
+      .stats-grid{grid-template-columns:1fr}
       #map{
         height:520px;
         min-height:520px;
       }
-
       .map-shell{
         padding:10px;
         min-height:550px;
       }
-
       .floating-actions{
-        left:24px;
-        right:24px;
+        left:22px;
+        right:22px;
       }
-
       .floating-actions button{
         flex:1;
       }
-
       .result-badge{
         left:16px;
         right:16px;
@@ -732,43 +587,16 @@
   <header class="navbar">
     <div class="brand">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
     <div class="nav-actions">
-      <a href="#beranda" class="btn btn-dark">Beranda</a>
+      <a href="index.html" class="btn btn-dark">Home</a>
       <a href="#mapSection" class="btn btn-red">Lihat Peta</a>
     </div>
   </header>
 
-  <section class="hero" id="beranda">
-    <div class="hero-wrap">
-      <div class="hero-copy">
-        <div class="hero-chip">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
-        <h1>Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</h1>
-        <p>
-          WebGIS ini menyajikan informasi persebaran fasilitas kesehatan secara interaktif. Tampilan data dapat dipilih antara fasilitas kesehatan Surakarta, QGIS2Web Sukoharjo, atau overlay keduanya tanpa mengubah data utama yang sudah ada.
-        </p>
-        <div class="hero-actions">
-          <a href="#mapSection" class="btn btn-red">Buka Halaman Peta</a>
-          <button class="btn btn-dark" onclick="window.scrollTo({top: document.getElementById('mapSection').offsetTop, behavior:'smooth'})">Jelajahi Sekarang</button>
-        </div>
-      </div>
-
-      <div class="hero-panel">
-        <h3>Ringkasan Fasilitas</h3>
-        <p>Informasi ringkas jumlah fasilitas kesehatan Surakarta yang sedang tampil pada peta. Nilai akan berubah mengikuti filter dan pencarian.</p>
-        <div class="hero-stats">
-          <div class="hero-stat"><small>Total fasilitas</small><strong id="heroTotal">43</strong></div>
-          <div class="hero-stat"><small>Rumah sakit</small><strong id="heroRs">23</strong></div>
-          <div class="hero-stat"><small>Klinik</small><strong id="heroKlinik">13</strong></div>
-          <div class="hero-stat"><small>Apotek & dokter</small><strong id="heroLain">7</strong></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="mapSection">
     <div class="section-head">
-      <h2>Peta Interaktif Fasilitas Kesehatan</h2>
+      <h1>Peta Interaktif Fasilitas Kesehatan</h1>
       <p>
-        Interface dirapikan agar peta menjadi fokus utama. Filter, mode data, tampilan peta, informasi penggunaan, dan legenda dikelompokkan lebih ringkas tanpa mengubah data dan fungsi utama yang sudah ada.
+        Gunakan panel di samping kiri untuk memilih mode data, memfilter kategori fasilitas Surakarta, mencari lokasi, mengganti basemap, dan membaca legenda data. Tampilan dibuat lebih fokus pada peta agar visualisasi lebih nyaman digunakan.
       </p>
     </div>
 
@@ -821,7 +649,7 @@
               <div class="acc-item">
                 <button class="acc-head" type="button"><span>Informasi Penggunaan</span><span class="plus">+</span></button>
                 <div class="acc-body">
-                  <p class="panel-desc">Klik marker atau area layer untuk melihat detail data. Fitur rute berlaku untuk marker fasilitas Surakarta.</p>
+                  <p class="panel-desc">Klik marker atau area layer untuk melihat detail data. Tombol rute hanya berlaku pada marker fasilitas Surakarta.</p>
                   <ul style="padding-left:18px; margin:10px 0 0; color:#334155; line-height:1.8;">
                     <li>Pilih mode data yang ingin ditampilkan</li>
                     <li>Gunakan filter fasilitas Surakarta</li>
@@ -865,7 +693,7 @@
         <div class="toolbar">
           <div class="toolbar-left">
             <h3>Pusat Kontrol Peta</h3>
-            <p>Mode data, statistik, dan tampilan peta dikelola dari panel yang lebih rapi.</p>
+            <p>Mode data, statistik, dan filter dipusatkan pada panel yang lebih ringkas.</p>
           </div>
           <div class="toolbar-right">
             <button class="btn btn-primary mobile-filter-btn" id="openSidebarBtn">Filter & Layer</button>
@@ -883,7 +711,6 @@
         <div class="map-shell">
           <div class="result-badge" id="resultBadge">Menampilkan 0 hasil</div>
           <div class="floating-actions">
-            <button id="backHome">← Home</button>
             <button id="fly">Ke Pusat</button>
           </div>
           <div id="map"></div>
@@ -930,7 +757,7 @@
       unit: 'metric',
       profile: 'mapbox/driving',
       language: 'id',
-      controls: { instructions:true, profileSwitcher:true }
+      controls: { instructions:true, profileSwitcher:true, inputs:true }
     });
     map.addControl(directions, 'top-right');
 
@@ -1027,22 +854,44 @@
       `;
     }
 
+    function setDirectionsThemeAndRoute(){
+      const routeLayerId = 'directions-route-line';
+      const casingLayerId = 'directions-route-line-casing';
+
+      if(map.getLayer(casingLayerId)){
+        map.setPaintProperty(casingLayerId, 'line-color', '#ffffff');
+        map.setPaintProperty(casingLayerId, 'line-width', 10);
+        map.setPaintProperty(casingLayerId, 'line-opacity', 0.95);
+      }
+
+      if(map.getLayer(routeLayerId)){
+        map.setPaintProperty(routeLayerId, 'line-color', '#58e8ff');
+        map.setPaintProperty(routeLayerId, 'line-width', 6);
+        map.setPaintProperty(routeLayerId, 'line-opacity', 0.95);
+      }
+    }
+
     window.setRouteTo = function(lng, lat){
       const destination = [lng, lat];
+
       function drawRoute(origin){
         currentRouteState.origin = origin;
         currentRouteState.destination = destination;
         directions.removeRoutes();
         directions.setOrigin(origin);
         directions.setDestination(destination);
+        setTimeout(setDirectionsThemeAndRoute, 800);
       }
+
       if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(
           (position) => drawRoute([position.coords.longitude, position.coords.latitude]),
           () => drawRoute(soloCenter),
           { enableHighAccuracy:true, timeout:10000, maximumAge:0 }
         );
-      } else drawRoute(soloCenter);
+      } else {
+        drawRoute(soloCenter);
+      }
     };
 
     function restoreDirectionsRoute(){
@@ -1052,7 +901,8 @@
       setTimeout(() => {
         directions.setOrigin(currentRouteState.origin);
         directions.setDestination(currentRouteState.destination);
-      }, 250);
+        setDirectionsThemeAndRoute();
+      }, 300);
     }
 
     function enrichGeoJSONFeatures(categoryKey, data){
@@ -1394,10 +1244,6 @@
       document.getElementById('statDokter').textContent = counts.dokter;
       document.getElementById('statKlinik').textContent = counts.klinik;
       document.getElementById('statRs').textContent = counts.rs;
-      document.getElementById('heroTotal').textContent = matched.length || 43;
-      document.getElementById('heroRs').textContent = counts.rs || 23;
-      document.getElementById('heroKlinik').textContent = counts.klinik || 13;
-      document.getElementById('heroLain').textContent = (counts.apotek + counts.dokter) || 7;
 
       const badge = document.getElementById('resultBadge');
       if(normalizeText(keyword)){
@@ -1480,14 +1326,11 @@
       updateStats(document.getElementById('searchBox').value);
       setLayerVisibilityByMode(currentLayerMode);
       if(!afterStyleChange) map.jumpTo({ center:soloCenter, zoom:11.8 });
+      setTimeout(setDirectionsThemeAndRoute, 500);
     }
 
     document.getElementById('fly').addEventListener('click', () => {
       map.flyTo({ center:soloCenter, zoom:13, duration:1800 });
-    });
-
-    document.getElementById('backHome').addEventListener('click', () => {
-      window.scrollTo({ top:0, behavior:'smooth' });
     });
 
     ['apotek','dokter','klinik','rs'].forEach(id => {
@@ -1551,10 +1394,15 @@
         applyMarkerVisibilityByState('');
         updateStats('');
         setLayerVisibilityByMode('health');
+        setTimeout(setDirectionsThemeAndRoute, 700);
       } catch(error){
         console.error(error);
         alert('Data GeoJSON gagal dimuat. Cek path assets/geojson/ dan file qgis2web pada folder data/.');
       }
+    });
+
+    map.on('styledata', () => {
+      setTimeout(setDirectionsThemeAndRoute, 500);
     });
 
     map.on('error', (e) => console.error('Mapbox error:', e));

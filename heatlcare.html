@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
@@ -19,16 +19,17 @@
 
   <style>
     :root{
-      --primary:#16233b;
+      --primary:#11213b;
+      --primary-2:#1a3156;
       --secondary:#ef4444;
       --accent:#0ea5a4;
-      --light:#eef4f8;
+      --bg:#eef4f8;
       --card:#ffffff;
-      --muted:#64748b;
       --text:#0f172a;
-      --shadow:0 12px 30px rgba(15,23,42,.10);
-      --radius:20px;
-      --border:1px solid rgba(226,232,240,.95);
+      --muted:#64748b;
+      --line:#dbe5ef;
+      --shadow:0 18px 40px rgba(15,23,42,.10);
+      --radius:22px;
     }
 
     *{box-sizing:border-box}
@@ -36,164 +37,256 @@
     body{
       margin:0;
       font-family:'Poppins',sans-serif;
-      background:var(--light);
       color:var(--text);
+      background:var(--bg);
     }
 
     .navbar{
       position:fixed;
-      inset:0 0 auto 0;
-      height:64px;
+      top:0;
+      left:0;
+      right:0;
+      z-index:1000;
+      height:70px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 22px;
-      background:rgba(15,23,42,.92);
-      color:#fff;
-      z-index:1000;
-      box-shadow:0 8px 24px rgba(0,0,0,.14);
+      padding:0 24px;
+      background:rgba(10,20,36,.92);
       backdrop-filter:blur(10px);
+      box-shadow:0 10px 30px rgba(0,0,0,.12);
     }
 
-    .brand{font-size:16px;font-weight:700}
-    .nav-links{display:flex;gap:10px}
-    .nav-links a,.btn{
-      text-decoration:none;
+    .brand{
+      color:#fff;
+      font-weight:700;
+      font-size:17px;
+      letter-spacing:.1px;
+    }
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
       border:none;
-      border-radius:12px;
-      padding:10px 16px;
+      border-radius:14px;
+      padding:11px 16px;
       font:600 14px 'Poppins',sans-serif;
       cursor:pointer;
+      text-decoration:none;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       transition:.2s ease;
     }
-    .btn-outline{background:rgba(255,255,255,.12);color:#fff}
-    .btn-primary{background:var(--secondary);color:#fff}
-    .btn:hover,.nav-links a:hover{transform:translateY(-1px)}
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-dark{background:rgba(255,255,255,.10);color:#fff}
+    .btn-red{background:var(--secondary);color:#fff}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-light{background:#fff;color:var(--primary)}
 
     .hero{
-      min-height:78vh;
-      padding:108px 24px 56px;
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:36px;
-      align-items:center;
+      min-height:72vh;
+      padding:108px 24px 42px;
       background:
-        linear-gradient(rgba(10,18,35,.70), rgba(10,18,35,.80)),
-        radial-gradient(circle at top right, rgba(239,68,68,.14), transparent 24%),
+        linear-gradient(rgba(9,18,33,.60), rgba(9,18,33,.76)),
         url('assets/image/Surakarta.jpg');
       background-size:cover;
       background-position:center;
       color:#fff;
+      display:flex;
+      align-items:center;
     }
-    .hero-copy{max-width:760px;margin:0 auto}
-    .hero-kicker{
-      display:inline-block;
-      margin-bottom:14px;
-      padding:8px 14px;
+
+    .hero-wrap{
+      width:100%;
+      max-width:1360px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:28px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      max-width:760px;
+    }
+
+    .hero-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
       border-radius:999px;
       background:rgba(255,255,255,.12);
       font-size:13px;
       font-weight:600;
+      margin-bottom:16px;
     }
-    .hero h1{margin:0 0 14px;font-size:54px;line-height:1.08}
-    .hero p{margin:0 0 24px;font-size:17px;line-height:1.8;color:rgba(255,255,255,.9)}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
 
-    .hero-card{
-      background:rgba(255,255,255,.10);
+    .hero h1{
+      margin:0 0 14px;
+      font-size:60px;
+      line-height:1.04;
+      font-weight:800;
+      letter-spacing:-1px;
+    }
+
+    .hero p{
+      margin:0 0 24px;
+      max-width:700px;
+      font-size:18px;
+      line-height:1.8;
+      color:rgba(255,255,255,.92);
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .hero-panel{
+      background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.16);
       border-radius:28px;
-      padding:24px;
+      padding:22px;
       backdrop-filter:blur(12px);
-      box-shadow:0 20px 40px rgba(0,0,0,.18);
-      max-width:520px;
-      margin:0 auto;
-    }
-    .hero-card h3{margin:0 0 10px;font-size:28px}
-    .hero-card p{margin:0 0 16px;font-size:14px;line-height:1.8;color:rgba(255,255,255,.82)}
-    .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    .hero-stat{
-      background:rgba(255,255,255,.11);
-      border-radius:18px;
-      padding:18px;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .hero-stat small{display:block;color:rgba(255,255,255,.72);margin-bottom:6px;font-size:12px}
-    .hero-stat strong{font-size:28px;color:#fff}
-
-    .map-section{
-      padding:34px 0 56px;
-      background:#eef4f8;
-      min-height:100vh;
-      scroll-margin-top:84px;
+      box-shadow:0 18px 40px rgba(0,0,0,.16);
     }
 
-    .section-header{
-      padding:0 24px 20px;
+    .hero-panel h3{
+      margin:0 0 8px;
+      font-size:24px;
+      color:#fff;
     }
-    .section-header h2{margin:0 0 8px;font-size:38px;line-height:1.15}
-    .section-header p{margin:0;max-width:980px;color:var(--muted);line-height:1.75}
 
-    .map-layout{
+    .hero-panel p{
+      margin:0 0 16px;
+      font-size:14px;
+      line-height:1.8;
+      color:rgba(255,255,255,.82);
+    }
+
+    .hero-stats{
       display:grid;
-      grid-template-columns:300px minmax(0,1fr);
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+
+    .hero-stat{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .hero-stat small{
+      display:block;
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      margin-bottom:6px;
+    }
+
+    .hero-stat strong{
+      color:#fff;
+      font-size:28px;
+      line-height:1;
+    }
+
+    .section-head{
+      max-width:1360px;
+      margin:0 auto;
+      padding:26px 24px 18px;
+    }
+
+    .section-head h2{
+      margin:0 0 8px;
+      font-size:42px;
+      line-height:1.1;
+      letter-spacing:-.5px;
+    }
+
+    .section-head p{
+      margin:0;
+      max-width:980px;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:15px;
+    }
+
+    .workspace{
+      max-width:1360px;
+      margin:0 auto;
+      padding:0 24px 42px;
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
       gap:20px;
-      padding:0 24px;
       align-items:start;
     }
 
     .sidebar{
       position:sticky;
-      top:84px;
+      top:86px;
       display:flex;
       flex-direction:column;
-      gap:14px;
-      max-height:calc(100vh - 96px);
-      overflow:auto;
-      padding-right:2px;
+      gap:16px;
     }
-    .sidebar::-webkit-scrollbar{width:8px}
-    .sidebar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
 
-    .card{
+    .panel{
       background:var(--card);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      border:var(--border);
-      padding:16px;
+      border:1px solid rgba(226,232,240,.95);
+      overflow:hidden;
     }
 
-    .mode-switch{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
+    .panel-body{
+      padding:18px;
     }
 
-    .segmented{
+    .panel-title{
+      margin:0 0 8px;
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .panel-desc{
+      margin:0;
+      font-size:13px;
+      line-height:1.75;
+      color:var(--muted);
+    }
+
+    .mode-tabs{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:8px;
+      margin-top:14px;
       background:#f1f5f9;
-      padding:8px;
       border-radius:16px;
+      padding:8px;
     }
-    .segmented button{
+
+    .mode-btn{
       border:none;
       border-radius:12px;
-      padding:10px 8px;
+      padding:10px 10px;
       font:600 13px 'Poppins',sans-serif;
       background:transparent;
       color:#334155;
       cursor:pointer;
       transition:.2s ease;
     }
-    .segmented button.active{
+
+    .mode-btn.active{
       background:var(--primary);
       color:#fff;
-      box-shadow:0 6px 16px rgba(15,23,42,.14);
+      box-shadow:0 8px 18px rgba(15,23,42,.12);
     }
 
     .accordion{
@@ -203,128 +296,205 @@
     }
 
     .acc-item{
-      background:#fff;
-      border:var(--border);
+      border:1px solid var(--line);
       border-radius:18px;
       overflow:hidden;
+      background:#fff;
     }
+
     .acc-head{
       width:100%;
       border:none;
       background:#fff;
-      padding:16px 16px;
+      padding:16px 18px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      font:600 16px 'Poppins',sans-serif;
-      cursor:pointer;
+      font:700 15px 'Poppins',sans-serif;
       color:var(--text);
+      cursor:pointer;
     }
-    .acc-head span:last-child{
-      font-size:18px;
+
+    .acc-head .plus{
+      font-size:20px;
       color:#64748b;
       transition:.2s ease;
     }
-    .acc-item.open .acc-head span:last-child{transform:rotate(45deg)}
+
+    .acc-item.open .plus{transform:rotate(45deg)}
     .acc-body{
       display:none;
-      padding:0 16px 16px;
+      padding:0 18px 18px;
     }
+
     .acc-item.open .acc-body{display:block}
 
-    .muted{color:var(--muted);font-size:13px;line-height:1.7}
+    .filter-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
 
-    .filter-list{display:grid;gap:10px;margin-top:12px}
     .filter-item{
       display:flex;
       align-items:center;
       gap:10px;
-      padding:10px 12px;
+      padding:12px 14px;
       border-radius:14px;
       background:#f8fafc;
       border:1px solid #e2e8f0;
       font-size:14px;
     }
 
-    .search-box, select{
+    .search-box,
+    select{
       width:100%;
-      padding:12px 14px;
+      margin-top:12px;
+      padding:13px 14px;
       border-radius:14px;
       border:1px solid #dbe4ee;
       background:#f8fafc;
       font:14px 'Poppins',sans-serif;
-      margin-top:12px;
     }
-    .search-box:focus, select:focus{
+
+    .search-box:focus,
+    select:focus{
       outline:none;
       border-color:#93c5fd;
       box-shadow:0 0 0 4px rgba(59,130,246,.12);
     }
 
-    .legend-list{display:grid;gap:10px;margin-top:10px}
-    .legend-item{display:flex;align-items:center;gap:10px}
-    .dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px}
+    .legend-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
 
-    .map-wrapper{display:flex;flex-direction:column;gap:14px;min-width:0}
-    .topbar{
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:14px;
+    }
+
+    .dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      flex:0 0 12px;
+    }
+
+    .map-area{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-width:0;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .toolbar-left h3{
+      margin:0 0 4px;
+      font-size:22px;
+    }
+
+    .toolbar-left p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .toolbar-right{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .mobile-filter-btn{
+      display:none;
+    }
+
+    .stats-grid{
       display:grid;
       grid-template-columns:repeat(5,minmax(120px,1fr));
       gap:12px;
     }
+
     .stat-card{
       background:#fff;
       border-radius:18px;
-      padding:15px 16px;
+      padding:16px;
+      border:1px solid rgba(226,232,240,.95);
       box-shadow:var(--shadow);
-      border:var(--border);
     }
-    .stat-card span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
-    .stat-card strong{font-size:24px;color:var(--text)}
 
-    .map-card{
+    .stat-card span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:600;
+    }
+
+    .stat-card strong{
+      font-size:24px;
+      line-height:1;
+    }
+
+    .map-shell{
       position:relative;
       background:#fff;
-      border-radius:26px;
+      border-radius:28px;
       padding:14px;
+      border:1px solid rgba(226,232,240,.95);
       box-shadow:var(--shadow);
-      border:var(--border);
+      min-height:calc(100vh - 210px);
       display:flex;
       flex-direction:column;
-      min-height:calc(100vh - 180px);
     }
+
     #map{
       width:100%;
-      height:calc(100vh - 220px);
+      height:calc(100vh - 250px);
       min-height:720px;
-      border-radius:20px;
+      border-radius:22px;
       flex:1;
     }
 
     .floating-actions{
       position:absolute;
-      top:20px;
-      right:20px;
+      top:24px;
+      right:24px;
       z-index:20;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
+
     .floating-actions button{
       border:none;
-      border-radius:12px;
-      padding:10px 14px;
+      border-radius:14px;
+      padding:11px 14px;
       font:600 14px 'Poppins',sans-serif;
       cursor:pointer;
       color:#fff;
       box-shadow:0 8px 18px rgba(15,23,42,.14);
     }
+
     #backHome{background:var(--primary)}
     #fly{background:var(--secondary)}
 
     .result-badge{
       position:absolute;
-      top:20px;
-      left:20px;
+      top:24px;
+      left:24px;
       z-index:20;
       display:none;
       background:rgba(15,23,42,.88);
@@ -332,13 +502,29 @@
       padding:10px 14px;
       border-radius:999px;
       font-size:12px;
+      box-shadow:0 12px 24px rgba(15,23,42,.16);
     }
 
-    .custom-copyright{
+    .copyright{
       text-align:center;
-      padding:18px 24px 34px;
-      font-size:12px;
+      padding:0 24px 34px;
       color:#64748b;
+      font-size:12px;
+    }
+
+    .drawer-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.45);
+      z-index:1200;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s ease;
+    }
+
+    .drawer-backdrop.show{
+      opacity:1;
+      pointer-events:auto;
     }
 
     .mapboxgl-ctrl-top-left{top:14px !important;left:14px !important}
@@ -368,7 +554,11 @@
       color:#334155;
       font-size:11px;
     }
-    .popup-alamat{color:#475569;font-size:13px;line-height:1.6}
+    .popup-alamat{
+      color:#475569;
+      font-size:13px;
+      line-height:1.6;
+    }
     .popup-button{
       margin-top:12px;
       width:100%;
@@ -382,184 +572,307 @@
     }
 
     @media (max-width:1200px){
-      .hero{grid-template-columns:1fr}
-      .hero-copy,.hero-card{max-width:none;width:100%}
-      .map-layout{grid-template-columns:280px minmax(0,1fr)}
-      .topbar{grid-template-columns:repeat(3,1fr)}
-      .section-header h2{font-size:34px}
-      .segmented{grid-template-columns:1fr}
+      .hero-wrap{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:48px;
+      }
+
+      .workspace{
+        grid-template-columns:290px minmax(0,1fr);
+      }
+
+      .stats-grid{
+        grid-template-columns:repeat(3,1fr);
+      }
+
+      .mode-tabs{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:900px){
-      .navbar{padding:0 14px}
-      .brand{font-size:14px}
-      .nav-links{display:none}
-      .hero h1{font-size:38px}
-      .section-header h2{font-size:28px}
-      .map-layout{grid-template-columns:1fr;padding:0 16px}
-      .sidebar{
-        position:static;
-        max-height:none;
-        overflow:visible;
-        order:2;
+      .navbar{
+        padding:0 14px;
       }
-      .map-wrapper{order:1}
-      .topbar{grid-template-columns:repeat(2,1fr)}
-      .map-card{min-height:620px}
-      #map{height:590px;min-height:590px}
-      .floating-actions{top:auto;bottom:24px;right:24px}
-      .mapboxgl-ctrl-top-right{top:14px !important;right:14px !important}
-      .mapboxgl-ctrl-directions{width:280px !important;max-width:280px !important}
+
+      .brand{
+        font-size:14px;
+      }
+
+      .hero{
+        min-height:auto;
+        padding:100px 18px 34px;
+      }
+
+      .hero h1{
+        font-size:38px;
+      }
+
+      .section-head{
+        padding:22px 16px 16px;
+      }
+
+      .section-head h2{
+        font-size:30px;
+      }
+
+      .workspace{
+        grid-template-columns:1fr;
+        padding:0 16px 32px;
+      }
+
+      .sidebar{
+        position:fixed;
+        top:0;
+        left:0;
+        bottom:0;
+        width:min(88vw,360px);
+        z-index:1300;
+        background:#fff;
+        padding:84px 16px 18px;
+        overflow:auto;
+        transform:translateX(-110%);
+        transition:.25s ease;
+        box-shadow:20px 0 40px rgba(15,23,42,.18);
+      }
+
+      .sidebar.show{
+        transform:translateX(0);
+      }
+
+      .mobile-filter-btn{
+        display:inline-flex;
+      }
+
+      .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .map-shell{
+        min-height:620px;
+      }
+
+      #map{
+        height:590px;
+        min-height:590px;
+      }
+
+      .floating-actions{
+        top:auto;
+        bottom:24px;
+        right:24px;
+      }
+
+      .mapboxgl-ctrl-top-right{
+        top:14px !important;
+        right:14px !important;
+      }
+
+      .mapboxgl-ctrl-directions{
+        width:280px !important;
+        max-width:280px !important;
+      }
     }
 
     @media (max-width:640px){
-      .hero{padding:96px 18px 40px}
-      .hero h1{font-size:32px}
-      .hero-stats{grid-template-columns:1fr}
-      .map-layout,.section-header{padding-left:16px;padding-right:16px}
-      .topbar{grid-template-columns:1fr}
-      .floating-actions{left:24px;right:24px}
-      .floating-actions button{flex:1}
+      .nav-actions .btn-dark{
+        display:none;
+      }
+
+      .hero h1{
+        font-size:32px;
+      }
+
+      .hero-stats{
+        grid-template-columns:1fr;
+      }
+
+      .toolbar{
+        align-items:flex-start;
+      }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      #map{
+        height:520px;
+        min-height:520px;
+      }
+
+      .map-shell{
+        padding:10px;
+        min-height:550px;
+      }
+
+      .floating-actions{
+        left:24px;
+        right:24px;
+      }
+
+      .floating-actions button{
+        flex:1;
+      }
+
       .result-badge{
         left:16px;
         right:16px;
         width:auto;
         border-radius:14px;
       }
-      #map{height:520px;min-height:520px}
-      .map-card{padding:10px;min-height:550px}
     }
   </style>
 </head>
 <body>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
   <header class="navbar">
     <div class="brand">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
-    <div class="nav-links">
-      <a href="#beranda" class="btn btn-outline">Beranda</a>
-      <a href="#mapSection" class="btn btn-primary">Lihat Peta</a>
+    <div class="nav-actions">
+      <a href="#beranda" class="btn btn-dark">Beranda</a>
+      <a href="#mapSection" class="btn btn-red">Lihat Peta</a>
     </div>
   </header>
 
   <section class="hero" id="beranda">
-    <div class="hero-copy">
-      <div class="hero-kicker">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
-      <h1>Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</h1>
-      <p>
-        WebGIS ini menyajikan persebaran fasilitas kesehatan secara interaktif. Data dapat ditampilkan dalam tiga mode: fasilitas kesehatan Surakarta, QGIS2Web Sukoharjo, atau overlay keduanya dalam satu peta.
-      </p>
-      <div class="hero-actions">
-        <a href="#mapSection" class="btn btn-primary">Buka Halaman Peta</a>
-        <button class="btn btn-outline" onclick="window.scrollTo({top: document.getElementById('mapSection').offsetTop, behavior:'smooth'})">Jelajahi Sekarang</button>
+    <div class="hero-wrap">
+      <div class="hero-copy">
+        <div class="hero-chip">WebGIS Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</div>
+        <h1>Fasilitas Kesehatan Kota Surakarta dan Sekitarnya</h1>
+        <p>
+          WebGIS ini menyajikan informasi persebaran fasilitas kesehatan secara interaktif. Tampilan data dapat dipilih antara fasilitas kesehatan Surakarta, QGIS2Web Sukoharjo, atau overlay keduanya tanpa mengubah data utama yang sudah ada.
+        </p>
+        <div class="hero-actions">
+          <a href="#mapSection" class="btn btn-red">Buka Halaman Peta</a>
+          <button class="btn btn-dark" onclick="window.scrollTo({top: document.getElementById('mapSection').offsetTop, behavior:'smooth'})">Jelajahi Sekarang</button>
+        </div>
       </div>
-    </div>
 
-    <div class="hero-card">
-      <h3>Ringkasan Fasilitas</h3>
-      <p>
-        Ringkasan jumlah fasilitas kesehatan yang aktif ditampilkan di peta Surakarta. Nilai berubah sesuai filter dan pencarian.
-      </p>
-      <div class="hero-stats">
-        <div class="hero-stat"><small>Total fasilitas</small><strong id="heroTotal">43</strong></div>
-        <div class="hero-stat"><small>Rumah sakit</small><strong id="heroRs">23</strong></div>
-        <div class="hero-stat"><small>Klinik</small><strong id="heroKlinik">13</strong></div>
-        <div class="hero-stat"><small>Apotek & dokter</small><strong id="heroLain">7</strong></div>
+      <div class="hero-panel">
+        <h3>Ringkasan Fasilitas</h3>
+        <p>Informasi ringkas jumlah fasilitas kesehatan Surakarta yang sedang tampil pada peta. Nilai akan berubah mengikuti filter dan pencarian.</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><small>Total fasilitas</small><strong id="heroTotal">43</strong></div>
+          <div class="hero-stat"><small>Rumah sakit</small><strong id="heroRs">23</strong></div>
+          <div class="hero-stat"><small>Klinik</small><strong id="heroKlinik">13</strong></div>
+          <div class="hero-stat"><small>Apotek & dokter</small><strong id="heroLain">7</strong></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="map-section" id="mapSection">
-    <div class="section-header">
+  <section id="mapSection">
+    <div class="section-head">
       <h2>Peta Interaktif Fasilitas Kesehatan</h2>
       <p>
-        Sidebar diringkas dengan sistem accordion supaya tampilan lebih bersih. Fokus utama tetap pada peta, sementara filter, legenda, dan informasi tambahan bisa dibuka saat dibutuhkan.
+        Interface dirapikan agar peta menjadi fokus utama. Filter, mode data, tampilan peta, informasi penggunaan, dan legenda dikelompokkan lebih ringkas tanpa mengubah data dan fungsi utama yang sudah ada.
       </p>
     </div>
 
-    <div class="map-layout">
-      <aside class="sidebar">
-        <div class="card mode-switch">
-          <h3 style="margin:0 0 6px;">Mode Data</h3>
-          <p class="muted" style="margin:0;">Pilih tampilan data yang ingin digunakan.</p>
-          <div class="segmented">
-            <button class="mode-btn active" data-mode="health">Surakarta</button>
-            <button class="mode-btn" data-mode="qgis">QGIS2Web</button>
-            <button class="mode-btn" data-mode="overlay">Overlay</button>
+    <div class="workspace">
+      <aside class="sidebar" id="sidebar">
+        <div class="panel">
+          <div class="panel-body">
+            <h3 class="panel-title">Mode Data</h3>
+            <p class="panel-desc">Pilih tampilan data yang ingin digunakan pada peta.</p>
+            <div class="mode-tabs">
+              <button class="mode-btn active" data-mode="health">Surakarta</button>
+              <button class="mode-btn" data-mode="qgis">QGIS2Web</button>
+              <button class="mode-btn" data-mode="overlay">Overlay</button>
+            </div>
           </div>
         </div>
 
-        <div class="accordion">
-          <div class="acc-item open">
-            <button class="acc-head" type="button"><span>Filter & Pencarian</span><span>+</span></button>
-            <div class="acc-body">
-              <p class="muted">Filter ini berlaku untuk data fasilitas kesehatan Surakarta.</p>
-              <div class="filter-list">
-                <label class="filter-item"><input type="checkbox" id="apotek" checked> Apotek</label>
-                <label class="filter-item"><input type="checkbox" id="dokter" checked> Dokter Gigi</label>
-                <label class="filter-item"><input type="checkbox" id="klinik" checked> Klinik</label>
-                <label class="filter-item"><input type="checkbox" id="rs" checked> Rumah Sakit</label>
+        <div class="panel">
+          <div class="panel-body">
+            <div class="accordion">
+              <div class="acc-item open">
+                <button class="acc-head" type="button"><span>Filter & Pencarian</span><span class="plus">+</span></button>
+                <div class="acc-body">
+                  <p class="panel-desc">Filter ini berlaku untuk data fasilitas kesehatan Surakarta.</p>
+                  <div class="filter-list">
+                    <label class="filter-item"><input type="checkbox" id="apotek" checked> Apotek</label>
+                    <label class="filter-item"><input type="checkbox" id="dokter" checked> Dokter Gigi</label>
+                    <label class="filter-item"><input type="checkbox" id="klinik" checked> Klinik</label>
+                    <label class="filter-item"><input type="checkbox" id="rs" checked> Rumah Sakit</label>
+                  </div>
+                  <input type="text" id="searchBox" class="search-box" placeholder="Cari fasilitas...">
+                </div>
               </div>
-              <input type="text" id="searchBox" class="search-box" placeholder="Cari fasilitas...">
-            </div>
-          </div>
 
-          <div class="acc-item">
-            <button class="acc-head" type="button"><span>Tampilan Peta</span><span>+</span></button>
-            <div class="acc-body">
-              <p class="muted">Pilih basemap sesuai kebutuhan visualisasi.</p>
-              <select id="basemapSelect">
-                <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
-                <option value="mapbox://styles/mapbox/light-v11">Light</option>
-                <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
-                <option value="mapbox://styles/mapbox/outdoors-v12" selected>Outdoors</option>
-                <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
-                <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="acc-item">
-            <button class="acc-head" type="button"><span>Informasi Penggunaan</span><span>+</span></button>
-            <div class="acc-body">
-              <p class="muted">Klik marker atau area layer untuk melihat detail data. Fitur rute berlaku untuk marker fasilitas Surakarta.</p>
-              <ul style="padding-left:18px; margin:10px 0 0;">
-                <li>Pilih mode data</li>
-                <li>Gunakan filter Surakarta</li>
-                <li>Cari nama atau alamat fasilitas</li>
-                <li>Ubah tampilan peta</li>
-                <li>Tentukan rute ke tujuan</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="acc-item">
-            <button class="acc-head" type="button"><span>Legenda Surakarta</span><span>+</span></button>
-            <div class="acc-body">
-              <div class="legend-list">
-                <div class="legend-item"><span class="dot" style="background:#2a9d8f"></span> 💊 Apotek</div>
-                <div class="legend-item"><span class="dot" style="background:#f4a261"></span> 🦷 Dokter Gigi</div>
-                <div class="legend-item"><span class="dot" style="background:#457b9d"></span> 🩺 Klinik</div>
-                <div class="legend-item"><span class="dot" style="background:#e63946"></span> 🏥 Rumah Sakit</div>
+              <div class="acc-item">
+                <button class="acc-head" type="button"><span>Tampilan Peta</span><span class="plus">+</span></button>
+                <div class="acc-body">
+                  <p class="panel-desc">Pilih basemap sesuai kebutuhan visualisasi dan kenyamanan tampilan.</p>
+                  <select id="basemapSelect">
+                    <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+                    <option value="mapbox://styles/mapbox/light-v11">Light</option>
+                    <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+                    <option value="mapbox://styles/mapbox/outdoors-v12" selected>Outdoors</option>
+                    <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+                    <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
+                  </select>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="acc-item">
-            <button class="acc-head" type="button"><span>Legenda QGIS2Web</span><span>+</span></button>
-            <div class="acc-body">
-              <div class="legend-list">
-                <div class="legend-item"><span class="dot" style="background:#eeff01"></span> Dokter Gigi Sukoharjo</div>
-                <div class="legend-item"><span class="dot" style="background:#1edec8"></span> Apotek Sukoharjo</div>
-                <div class="legend-item"><span class="dot" style="background:#e896a4"></span> Klinik Sukoharjo</div>
-                <div class="legend-item"><span class="dot" style="background:#e80000"></span> Rumah Sakit Sukoharjo</div>
-                <div class="legend-item"><span class="dot" style="background:#ff8500"></span> Building</div>
+              <div class="acc-item">
+                <button class="acc-head" type="button"><span>Informasi Penggunaan</span><span class="plus">+</span></button>
+                <div class="acc-body">
+                  <p class="panel-desc">Klik marker atau area layer untuk melihat detail data. Fitur rute berlaku untuk marker fasilitas Surakarta.</p>
+                  <ul style="padding-left:18px; margin:10px 0 0; color:#334155; line-height:1.8;">
+                    <li>Pilih mode data yang ingin ditampilkan</li>
+                    <li>Gunakan filter fasilitas Surakarta</li>
+                    <li>Cari nama atau alamat fasilitas</li>
+                    <li>Ubah tampilan peta sesuai kebutuhan</li>
+                    <li>Tentukan rute ke lokasi tujuan</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-head" type="button"><span>Legenda Surakarta</span><span class="plus">+</span></button>
+                <div class="acc-body">
+                  <div class="legend-list">
+                    <div class="legend-item"><span class="dot" style="background:#2a9d8f"></span> 💊 Apotek</div>
+                    <div class="legend-item"><span class="dot" style="background:#f4a261"></span> 🦷 Dokter Gigi</div>
+                    <div class="legend-item"><span class="dot" style="background:#457b9d"></span> 🩺 Klinik</div>
+                    <div class="legend-item"><span class="dot" style="background:#e63946"></span> 🏥 Rumah Sakit</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-head" type="button"><span>Legenda QGIS2Web</span><span class="plus">+</span></button>
+                <div class="acc-body">
+                  <div class="legend-list">
+                    <div class="legend-item"><span class="dot" style="background:#eeff01"></span> Dokter Gigi Sukoharjo</div>
+                    <div class="legend-item"><span class="dot" style="background:#1edec8"></span> Apotek Sukoharjo</div>
+                    <div class="legend-item"><span class="dot" style="background:#e896a4"></span> Klinik Sukoharjo</div>
+                    <div class="legend-item"><span class="dot" style="background:#e80000"></span> Rumah Sakit Sukoharjo</div>
+                    <div class="legend-item"><span class="dot" style="background:#ff8500"></span> Building</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </aside>
 
-      <div class="map-wrapper">
-        <div class="topbar" id="statsBar">
+      <div class="map-area">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <h3>Pusat Kontrol Peta</h3>
+            <p>Mode data, statistik, dan tampilan peta dikelola dari panel yang lebih rapi.</p>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-primary mobile-filter-btn" id="openSidebarBtn">Filter & Layer</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="statsBar">
           <div class="stat-card"><span>Total Tampil</span><strong id="statTotal">0</strong></div>
           <div class="stat-card"><span>Apotek</span><strong id="statApotek">0</strong></div>
           <div class="stat-card"><span>Dokter Gigi</span><strong id="statDokter">0</strong></div>
@@ -567,7 +880,7 @@
           <div class="stat-card"><span>Rumah Sakit</span><strong id="statRs">0</strong></div>
         </div>
 
-        <div class="map-card">
+        <div class="map-shell">
           <div class="result-badge" id="resultBadge">Menampilkan 0 hasil</div>
           <div class="floating-actions">
             <button id="backHome">← Home</button>
@@ -579,7 +892,7 @@
     </div>
   </section>
 
-  <div class="custom-copyright">
+  <div class="copyright">
     © 2026 WebGIS Fasilitas Kesehatan Surakarta - Eka Pungky Aprillia - 117230034
   </div>
 
@@ -627,6 +940,27 @@
     let currentRouteState = { origin:null, destination:null };
     let htmlMarkers = { apotek:[], dokter:[], klinik:[], rs:[] };
     let currentLayerMode = 'health';
+
+    const sidebar = document.getElementById('sidebar');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    const openSidebarBtn = document.getElementById('openSidebarBtn');
+
+    function openSidebar(){
+      if(window.innerWidth > 900) return;
+      sidebar.classList.add('show');
+      drawerBackdrop.classList.add('show');
+    }
+
+    function closeSidebar(){
+      sidebar.classList.remove('show');
+      drawerBackdrop.classList.remove('show');
+    }
+
+    openSidebarBtn?.addEventListener('click', openSidebar);
+    drawerBackdrop.addEventListener('click', closeSidebar);
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 900) closeSidebar();
+    });
 
     function normalizeText(text){ return String(text || '').toLowerCase().trim(); }
 
@@ -863,7 +1197,7 @@
             type: 'fill',
             source: sourceId,
             filter: ['any',['==',['geometry-type'],'Polygon'],['==',['geometry-type'],'MultiPolygon']],
-            paint: { 'fill-color': color, 'fill-opacity': 0.22 }
+            paint: { 'fill-color': color, 'fill-opacity': 0.20 }
           });
           addQgisPopupEvents(ids.polygonFill, label);
         }
@@ -1187,6 +1521,7 @@
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         setLayerVisibilityByMode(btn.dataset.mode);
+        closeSidebar();
       });
     });
 
